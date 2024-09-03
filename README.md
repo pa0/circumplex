@@ -12,8 +12,8 @@ Zakład Psychologii Zdrowia i Psychologii Klinicznej Uniwersytetu im. Adama Mick
 
 Osoba kierująca projektem: **prof. UAM, dr hab. Emilia Soroko** [esoroko\@amu.edu.pl](mailto:esoroko@amu.edu.pl){.email}
 
-prof. UAM, dr hab. Paweł Kleka \
-dr Michał Sieński \
-mgr Marcel Kawczyński \
-mgr Agnieszka Smolnicka \
-prof. Christopher Hopwood, University of Zurich \
+prof. UAM, dr hab. Paweł Kleka\
+dr Michał Sieński\
+mgr Marcel Kawczyński\
+mgr Agnieszka Smolnicka\
+prof. Christopher Hopwood, University of Zurich\
