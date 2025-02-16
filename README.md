@@ -1,12 +1,14 @@
 # Circumplex
 
-Adaptacja narzędzi psychometrycznych do pomiaru interpersonalnej dynamiki w zaburzeniach osobowości
+Adaptation of psychometric tools to measure interpersonal dynamics in personality disorders
 
-1.  Kołowa Skala Wartości Interpersonalnych,
-2.  Kołowa Skala Wrażliwości Interpersonalnej,
-3.  Inwentarz Problemów Interpersonalnych
+The Circular Interpersonal Values Scale,
 
-Celem planowanego badania jest przeprowadzenie adaptacji i walidacji narzędzi psychometrycznych do pomiaru dynamiki interpersonalnej w zaburzeniach osobowości tj. Kołowa Skala Wartości Interpersonalnych, Kołowa Skala Wrażliwości Interpersonalnej, Inwentarz Problemów Interpersonalnych. Uwzględnienie dynamiki interpersonalnej w opisie i pomiarze osobowości jej zaburzeń stanowi nowatorski i jeden z najbardziej obiecujących kierunków rozwoju konceptualizacji w obszarze psychopatologii i w niniejszym projekcie podjęto się rozwinięcia tego wątku. Projekt jest rezultatem nawiązanej współpracy międzynarodowej z grupą badawczą współautora narzędzi i umożliwi dalszy rozwój tej koncepcji, jak również jej popularyzację wśród polskich badaczy.
+Circular Interpersonal Sensitivity Scale,
+
+Interpersonal Problems Inventory
+
+The aim of the planned study is to conduct adaptation and validation of psychometric tools for measuring interpersonal dynamics in personality disorders, i.e. the Circular Scale of Interpersonal Values, the Circular Scale of Interpersonal Sensitivity, the Interpersonal Problems Inventory. The inclusion of interpersonal dynamics in the description and measurement of personality disorders represents a novel and one of the most promising directions of conceptualisation development in the field of psychopathology, and the present project undertakes to develop this thread. The project is the result of an established international collaboration with the research group of the co-author of the tools and will enable further development of this concept, as well as its popularisation among Polish researchers.
 
 Zakład Psychologii Zdrowia i Psychologii Klinicznej Uniwersytetu im. Adama Mickiewicza w Poznaniu
 
@@ -16,4 +18,6 @@ prof. UAM, dr hab. Paweł Kleka\
 dr Michał Sieński\
 mgr Marcel Kawczyński\
 mgr Agnieszka Smolnicka\
-prof. Christopher Hopwood, University of Zurich\
+prof. Christopher Hopwood, University of Zurich
+
+\

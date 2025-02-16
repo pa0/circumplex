@@ -21,7 +21,7 @@ author:
     affiliation   : "1"
     role:
       - "Writing - Review & Editing"
-  - name          : "MArcel Kawczyński"
+  - name          : "Marcel Kawczyński"
     affiliation   : "1"
     role:
       - "Writing - Review & Editing"
@@ -70,8 +70,20 @@ figurelist        : no
 tablelist         : no
 footnotelist      : no
 
-classoption       : "man"
-output            : papaja::apa6_pdf
+format:
+#  apaquarto-docx: default
+  pdf: 
+    pdf-engine: lualatex
+    colorlinks: true
+    linkcolor: darkblue
+    citecolor: darkblue
+    urlcolor: darkblue
+    cite-method: natbib
+    #biblio-style: apalike
+    csl: apa_pl.csl
+    header-includes: |
+      \usepackage{xcolor}
+      \definecolor{darkblue}{RGB}{0,0,139}
 ---
 
 ```{r setup, include = FALSE}
