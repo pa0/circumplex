@@ -99,6 +99,12 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 
 ## Introduction
 
+Co z tego zostaje?
+
+Relationship Assessment Scale (RAS),
+Hypersensitive Narcissism Scale (HSNS), Inventory of Symptom Checklist-27-plus,
+Inwentarz osobowości dla ICD-11 (PiCD), Self and Interpersonal Functioning Scale (SIFS)
+
 ## Methods
 
 <!-- Here we report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. -->

@@ -1,0 +1,186 @@
+---
+title: "przeliczanie danych surowych"
+author: "Paweł Kleka"
+format: html
+---
+
+```{r}
+library(dplyr)
+
+# dane
+dane1 <- readxl::read_xlsx("../dane surowe/Adaptacja.xlsx")
+dane2 <- haven::read_sav("~/Documents/Uczelnie/Projekty naukowe/2025 circumplex/dane surowe/Zbiór_UAM_Emilia_Soroko3_v1 ARIADNA CIIT.sav")
+
+# książka kodowa
+codebook <- readr::read_delim(
+  "./../dane surowe/codebook.csv",
+  delim = ";",
+  escape_double = FALSE,
+  col_names = TRUE,
+  trim_ws = TRUE
+)
+
+#summarytools::dfSummary(dane1) |> summarytools::view()
+#summarytools::dfSummary(dane2) |> summarytools::view()
+```
+
+```{r}
+## Zapis informacji ukrytych w SPSS
+
+# Pobranie etykiet wartości
+labels_list <- sapply(dane2, function(x) attr(x, "labels"), simplify = FALSE)
+
+# Konwersja etykiet wartości do formatu string
+labels_string <- sapply(labels_list, function(lbls) {
+  if (is.null(lbls)) return(NA)  # Jeśli brak etykiet, zwróć NA
+  paste(lbls, names(lbls), sep = ":", collapse = ", ")
+}, simplify = TRUE)
+
+# Pobranie treści pytań (etykiet zmiennych)
+questions <- sapply(dane2, function(x) attr(x, "label"), simplify = TRUE)
+
+# Tworzenie ramki danych z nazwą zmiennej, treścią pytania i etykietami wartości
+labels_df <- data.frame(
+  variable = names(labels_string), 
+  question = questions, 
+  labels = labels_string, 
+  row.names = NULL
+)
+
+write.csv(labels_df, "./z_SPSS.csv")
+rm(list=c("labels_df", "labels_list", "labels_string"))
+```
+
+
+```{r}
+# zmiana nazw
+colnames(dane1)[!is.na(codebook$eng1)] <- codebook$eng1[!is.na(codebook$eng1)]
+colnames(dane2)[codebook$eng2 != "REMOVE"] <- codebook$eng2[codebook$eng2 != "REMOVE"]
+dane2 <- dane2[,which(codebook$eng2 != "REMOVE")]
+
+# łączenie danych
+
+# Dodawanie brakujących kolumn w dane1
+missing_cols_dane1 <- setdiff(colnames(dane2), colnames(dane1))
+if (length(missing_cols_dane1) > 0) {
+  dane1[missing_cols_dane1] <- NA
+}
+
+# Dodawanie brakujących kolumn w dane2 (gdyby dane2 miało mniej kolumn)
+missing_cols_dane2 <- setdiff(colnames(dane1), colnames(dane2))
+if (length(missing_cols_dane2) > 0) {
+  dane2[missing_cols_dane2] <- NA
+}
+
+# Upewnienie się, że kolejność kolumn jest taka sama
+dane2 <- dane2[, colnames(dane1)]
+
+# Łączenie ramek danych
+dane <- rbind(dane1, dane2)
+
+print(dane)
+rm(list=c("dane1","dane2","missing_cols_dane1", "missing_cols_dane2"))
+```
+
+```{r}
+# test pytań kontrolnych
+dane |>
+  filter(
+    dane$kontrola_0 == 0 |
+      is.na(dane$kontrola_0) |
+      dane$kontrola_3 != 3 |
+      is.na(dane$kontrola_3) |
+      dane$kontrola_7 != 7 | is.na(dane$kontrola_7)
+  ) -> dane
+
+dane$kontrola_0 <- NULL
+dane$kontrola_3 <- NULL
+dane$kontrola_7 <- NULL
+```
+
+
+
+```{r}
+## Recoding dane$gender
+dane$gender[dane$gender == "1"] <- "female"
+dane$gender[dane$gender == "2"] <- "male"
+dane$gender[dane$gender == "inna"] <- "other"
+dane$gender[dane$gender == "kobieta"] <- "female"
+dane$gender[dane$gender == "mężczyzna"] <- "male"
+
+## factors
+dane$education <- dane$education |> factor()
+dane$residence <- dane$residence |> factor()
+
+## Recoding dane$tenants
+dane$tenants[dane$tenants == "1"] <- "alone"
+dane$tenants[dane$tenants == "2"] <- "parents"
+dane$tenants[dane$tenants == "3"] <- "roommates"
+dane$tenants[dane$tenants == "4"] <- "family_kids"
+dane$tenants[dane$tenants == "5"] <- "multigenerational"
+dane$tenants[dane$tenants == "6"] <- "other"
+dane$tenants[dane$tenants == "inni"] <- "other"
+dane$tenants[dane$tenants == "partner/partner i dzieci"] <- "family_kids"
+dane$tenants[dane$tenants == "rodzice"] <- "parents"
+dane$tenants[dane$tenants == "rodzina wielopokoleniowa"] <- "multigenerational"
+dane$tenants[dane$tenants == "znajomi/osoby niespokrewnione"] <- "roommates"
+
+dane$tenants[which(dane$tenants_input == "z dzieckiem")] <-  "family_kids"
+dane$tenants[which(dane$tenants_input == "Z dzieckiem")] <-  "family_kids"
+dane$tenants[which(dane$tenants_input == "z dziećmi")] <-  "family_kids"
+dane$tenants[which(dane$tenants_input == "Z dziećmi")] <-  "family_kids"
+dane$tenants[which(dane$tenants_input == "z dorosłym synem")] <-  "multigenerational"
+dane$tenants[which(dane$tenants_input == "z dzieckiem i moją matką")] <-  "multigenerational"
+dane$tenants[which(dane$tenants_input == "Z partnerem i jego rodzicami oraz młodszym bratem")] <-  "multigenerational"
+dane$tenants[which(dane$tenants_input == "Z siostrą")] <-  "other"
+dane$tenants[which(dane$tenants_input == "Brat,  siostra")] <-  "other"
+dane$tenants[which(dane$tenants_input == "z bratem")] <-  "other"
+
+dane$tenants_input <- NULL
+
+## Recoding dane$martial_state
+dane$martial_state[dane$martial_state == "1"] <- "single"
+dane$martial_state[dane$martial_state == "2"] <- "unformal"
+dane$martial_state[dane$martial_state == "3"] <- "marriage"
+dane$martial_state[dane$martial_state == "4"] <- "after"
+dane$martial_state[dane$martial_state == "5"] <- "after"
+dane$martial_state[dane$martial_state == "małżeństwo"] <- "marriage"
+dane$martial_state[dane$martial_state == "rozwiedziona/y lub w separacji"] <- "after"
+dane$martial_state[dane$martial_state == "singiel"] <- "single"
+dane$martial_state[dane$martial_state == "wdowa/wdowiec"] <- "after"
+dane$martial_state[dane$martial_state == "związek nieformalny"] <- "unformal"
+
+
+
+
+
+##########
+codebook$labels[codebook$eng2=="martial_state"]
+```
+
+
+```{r}
+# zmiany w dane2
+dane2$survey_finish_time <- NULL     # technical question
+dane2$sex3 <- NULL                   # technical question
+dane2$age <- NULL                    # redundant question
+
+colnames(dane2)[c(1:7,206:227)] <- c("id", "gender", "age", "residence", 
+                "tenants", "tenants_input", "education", "martial_state", "relationship",
+                "job_activity_study", "job_activity_work", "job_activity_workless", "job_activity_other",
+                "if_housing_partner", "if_children", "if_pharmacotherapy", "if_psychotherapy_now",
+                "if_somatic_disease", "if_life_event", "if_psychotherapy", "psychotherapy_time", "if_hospital_treatment",
+                "if_medication", "change_self-esteem", "change_work", "change_relationships", "id_kod")
+```
+
+
+
+
+```{r}
+dane2 |> dplyr::select(dplyr::contains("aktywnosc_zawodowa_")) |> rowSums()
+```
+
+```{r}
+str(dane2)
+```
+
