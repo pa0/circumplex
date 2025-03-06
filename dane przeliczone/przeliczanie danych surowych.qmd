@@ -1,6 +1,6 @@
 ---
 title: "przeliczanie danych surowych"
-author: "Paweł Kleka"
+author: "Agnieszka Smolnicka, Paweł Kleka"
 format: html
 ---
 
@@ -24,8 +24,8 @@ codebook <- readr::read_delim(
 )
 ```
 
+```{r, eval=FALSE}
 
-```{r}
 summarytools::dfSummary(dane1, round.digits = 2, max.distinct.values = 15) %>%
   summarytools::view(footnote = '', custom.css = 'tiny_text.css', table.classes = 'tiny-text')
 summarytools::dfSummary(dane2, round.digits = 2, max.distinct.values = 15) %>%
@@ -35,7 +35,9 @@ summarytools::dfSummary(dane3, round.digits = 2, max.distinct.values = 15) %>%
 
 ```
 
-```{r}
+
+```{r, eval=FALSE}
+
 ## Zapis informacji ukrytych w SPSS
 
 # Pobranie etykiet wartości
@@ -107,13 +109,6 @@ dane2 = dane2 %>%
          .after = 'job_activity_other', .keep = 'unused') %>%
   mutate(if_housing_partner = ifelse(relationship != 2, if_housing_partner, NA))
 
-#
-
-dane3 %>% colnames
-```
-
-```{r}
-
 dane3 = dane3 %>%
   mutate(across(c('residence',
                   'education',
@@ -163,43 +158,7 @@ dane3 = dane3 %>%
          #across(c(matches('\\d$'),
          #         matches('\\d+b$')), ~ factor(., ordered = TRUE))
          )  
-  
-#
-
-dplyr::glimpse(dane1) 
-dplyr::glimpse(dane2) 
-
 ```
-
-
-Dane 1:
-
-"id"                    "age"                   "gender"
-"education"             "martial_state"         "relationship"          "job_activity"         "if_housing_partner"    "if_children"
-"residence"             "tenants"
-"if_pharmacotherapy"    "if_psychotherapy_now"  "if_somatic_disease"    "if_life_event"         "if_psychotherapy"
-"psychotherapy_time"    "if_hospital_treatment" "if_medication"         "change_selfesteem"     "change_work"          "change_relationships"
-
-Dane 2:
-
-"id"                    "gender"                "age"
-"residence"             "tenants"               "tenants_input"
-"education"             "martial_state"         "relationship"          "job_activity"          "if_housing_partner"    "if_children"
-"if_pharmacotherapy"    "if_psychotherapy_now"  "if_somatic_disease"    "if_life_event"         "if_psychotherapy"
-"psychotherapy_time"    "if_hospital_treatment" "if_medication"         "change_selfesteem"     "change_work"          "change_relationships"
-
-
-Dane 2 - Dane 1:
-
-"job_activity_parental_leave"  "tenants_input"  
-"CSIV_60b"     "IIPC.1_13b"     "ISC_31b"         "ISC_63b"                
-"kontrola_0"     "kontrola_3"     "kontrola_7"                 
-                              
- 
-Dane 1 - Dane 2:
-
-"job_activity_PhD_study" "if_before_change"
-
 
 ```{r}
 
@@ -343,10 +302,6 @@ dane <- rbind(dane1 %>% mutate(set = as.integer(1), .before = 1),
   mutate(id = as.integer(1:nrow(.)), .before = 1) %>%
   mutate(across(c(starts_with('job_activity'), 'if_before_change'), function(x) replace_na(x, 0)))
 
-dplyr::glimpse(dane) 
-
-
-print(dane)
 rm(list=c("dane1", "dane2", "missing_cols_dane1", "missing_cols_dane2"))
 ```
 
@@ -364,8 +319,6 @@ dane$kontrola_0 <- NULL
 dane$kontrola_3 <- NULL
 dane$kontrola_7 <- NULL
 ```
-
-
 
 ```{r}
 
@@ -414,7 +367,6 @@ dane$tenants[which(dane$tenants_input == "z bratem")] <-  "other"
 
 dane$tenants_input <- NULL
 
-
 ## Recoding dane$martial_state
 dane$martial_state[dane$martial_state == "1"] <- "single"
 dane$martial_state[dane$martial_state == "2"] <- "unformal"
@@ -445,9 +397,6 @@ dane = dane %>%
                                           if_psychotherapy_now %in% c('2', 'nie')    ~ 'no',
                                           if_psychotherapy_now == 'nie, ale planuję' ~ 'in the plans'))
 
-
-##########
-codebook$labels[codebook$eng2=="martial_state"]
 ```
 
 ```{r}

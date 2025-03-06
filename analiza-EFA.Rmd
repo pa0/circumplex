@@ -1,0 +1,146 @@
+<!-- 04 -->
+
+```{=html}
+<!--
+2. Ocena trafności zbieżnej
+    •   Przeprowadź badanie korelacyjne pomiędzy wynikami LIRS a innymi narzędziami mierzącymi samotność i relacje interpersonalne:
+    •   * UCLA-R – oczekiwane umiarkowane do wysokich korelacje.
+    •   INQ – umiarkowane korelacje z podskalą potrzeby przynależności.
+    •   PHQ-4 – niska do umiarkowanej korelacji dodatnia.
+    •   * FBSS – umiarkowana korelacja dodatnia.
+    •   * SELSA-S – wysoka korelacja z romantic SELSA-S, niższe korelacje z family i social SELSA-S.
+    •   Użyj współczynnika korelacji Pearsona (lub Spearmana, jeśli dane nie spełniają założeń normalności).
+-->
+```
+
+Korelacje między konstruktami, które potwierdzają zbieżny i różnicowy aspekt trafności.
+
+<!-- zostawić tylko te, które warto, np. UCLA, FBSS i SELSA -->
+
+```{r tbl-korelacjeMain}
+alpha_value <- psych::alpha(
+  (df_all |> filter(research == "3a") |> select(contains("lirs")))[,1:14],
+) |> _$total$std.alpha
+
+df_all |> 
+  filter(research == "3a") |> 
+  dplyr::select(
+  "lirs_total",
+  "uclar_total",
+  "inq_pb",
+  "inq_tb",
+  "selsa_family",
+  "selsa_romantic",
+  "selsa_social",
+  "phq_anxiety",
+  "phq_depression",
+  "fbss_single_fear"
+  ) |> corr.test(method = "pearson") -> cor_results
+
+# Rzetelności skal
+alpha(df_all[, grepl("uclar_", names(df_all))]) |> _[[1]] -> rtt_uclar
+alpha(df_all[, grepl("inq_", names(df_all))][,1:6]) |> _[[1]] -> rtt_inq_pb
+alpha(df_all[, grepl("inq_", names(df_all))][,7:15]) |> _[[1]] -> rtt_inq_tb
+alpha(df_all[, c("selsas_1", "selsas_4", "selsas_8", "selsas_11", "selsas_12")], check.keys = T) |>  _[[1]] -> rtt_selsa_family
+alpha(df_all[, c("selsas_3", "selsas_6", "selsas_10", "selsas_14", "selsas_15")]) |> _[[1]] -> rtt_selsa_romantic
+alpha(df_all[, c("selsas_2", "selsas_5", "selsas_7", "selsas_9", "selsas_13")]) |> _[[1]] -> rtt_selsa_social
+alpha(df_all[, c("phq_1", "phq_2")]) |> _[[1]] -> rtt_phq_anxiety
+alpha(df_all[, c("phq_3", "phq_4")]) |> _[[1]] -> rtt_phq_depression
+alpha((df_all |> select(contains("fbss")))[,1:6]) |> _[[1]] -> rtt_fbss_single_fear
+
+lista_rtt <- c(
+    rtt_uclar$std.alpha,
+    rtt_inq_pb$std.alpha,
+    rtt_inq_tb$std.alpha,
+    rtt_selsa_family$std.alpha,
+    rtt_selsa_romantic$std.alpha,
+    rtt_selsa_social$std.alpha,
+    rtt_phq_anxiety$std.alpha,
+    rtt_phq_depression$std.alpha,
+    rtt_fbss_single_fear$std.alpha) |> round(2)
+
+# Przygotowanie macierzy korelacji zgodnej z APA
+data.frame(
+  Dimension = dimnames(cor_results$r)[[1]][-1]|>
+    stringr::str_to_upper() |> stringr::str_replace_all(pattern = "_", " "),
+  r = paste0(
+    cor_results$r[-1, 1] |> round(3),
+    " (p = ",
+    ifelse(cor_results$p[-1, 1] < .001, "<.001", sprintf("%.3f", round(cor_results$p[-1, 1], 3))),
+    ")"
+  ),
+  `CI95` = paste0(
+    "[",
+    cor_results$ci.adj[1:9, "lower.adj"] |> round(2),
+    ", ",
+    cor_results$ci.adj$upper.adj[1:9] |> round(2),
+    "]"
+  ),
+  `disattenuated r` = correct.cor(cor_results$r, c(alpha_value, lista_rtt))[1, -1] |> round(3),
+  rtt = lista_rtt
+) |> 
+# Wyświetlenie tabeli
+  knitr::kable(
+    caption = "Pearson's correlation coefficients between LIRS total score and other tools with disattenuated adjustment for reliability",
+    col.names = c("Construct", "r (p value)", "95% CI", "Disattenuated r", "rtt"),
+    row.names = FALSE
+                  ) |>
+  kableExtra::kable_paper()
+```
+
+Podskale
+
+```{r tbl-korelacjePod}
+df_all |> 
+  filter(research == "3a") |> 
+  select(
+  "lirs_detachment",
+  "lirs_hurt",
+  "lirs_guilt",
+  "uclar_total",
+  "inq_pb",
+  "inq_tb",
+  "selsa_family",
+  "selsa_romantic",
+  "selsa_social",
+  "phq_anxiety",
+  "phq_depression",
+  "fbss_single_fear"
+  ) |> corr.test(method = "pearson") -> cor_results3
+
+# Przygotowanie macierzy korelacji zgodnej z APA
+data.frame(
+  Dimension = dimnames(cor_results3$r)[[1]][-c(1:3)] |>
+    stringr::str_to_upper() |> stringr::str_replace_all(pattern = "_", " "),
+  `LIRS detachment` = paste0(
+    cor_results3$r[-c(1:3), 1] |> round(3),
+   " (",
+   `disattenuated r` = correct.cor(cor_results3$r, c(alpha_value, c(alpha_value, alpha_value, lista_rtt)))[1, -c(1:3)] |> round(3),
+   ")"),
+  `CI.95` = paste0("[",cor_results3$ci.adj[1:9+3, "lower.adj"] |> round(2),", ",cor_results3$ci.adj$upper.adj[1:9+3] |> round(2),"]"),
+  ####
+  `LIRS hurt` = paste0(
+    cor_results3$r[-c(1:3), 2] |> round(3),
+   " (",
+   `disattenuated r` = correct.cor(cor_results3$r, c(alpha_value, c(alpha_value, alpha_value, lista_rtt)))[2, -c(1:3)] |> round(3),
+   ")"),
+  `CI.95` = paste0("[",cor_results3$ci.adj[1:9+3+9, "lower.adj"] |> round(2),", ",cor_results3$ci.adj$upper.adj[1:9+3+9] |> round(2),"]"),
+  ####
+  `LIRS guilt` = paste0(
+    cor_results3$r[-c(1:3), 3] |> round(3),
+   " (",
+   `disattenuated r` = correct.cor(cor_results3$r, c(alpha_value, c(alpha_value, alpha_value, lista_rtt)))[3, -c(1:3)] |> round(3),
+   ")"),
+  `CI.95` = paste0("[",cor_results3$ci.adj[1:9+3+18, "lower.adj"] |> round(2),", ",cor_results3$ci.adj$upper.adj[1:9+3+18] |> round(2),"]")
+  
+  
+) |> 
+# Wyświetlenie tabeli
+  kable(
+    caption = "Pearson's correlation coefficients between LIRS subscale score and other tools with disattenuated adjustment for reliability in parenthess",
+    col.names = c("Construct", "Detachment", "95% CI", "Hurt", "95% CI", "Guilt", "95% CI")) |>
+  kableExtra::kable_paper()
+```
+
+Niższe korelacje z family/social SELSA-S (< 0.40) potwierdzą, że LIRS mierzy samotność w związku, a nie ogólną samotność.
+

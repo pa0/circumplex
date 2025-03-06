@@ -1,0 +1,222 @@
+<!-- analiza struktury kołowej -->
+
+Analiza eksploracyjna
+
+???
+
+
+Analiza konfirmacyjna
+
+```{r, modele}
+model_one <- '
+# Definicja jednoczynnikowego modelu CFA
+F1 =~ lirs_1 + lirs_2 + lirs_3 + lirs_4 +
+       lirs_5 + lirs_6 + lirs_7 + lirs_8 +
+       lirs_9 + lirs_10 + lirs_11 + lirs_12 +
+       lirs_13 + lirs_14
+'
+
+model_multi <- '
+# Detachement
+  DET =~ lirs_11 + lirs_12 + lirs_13 + lirs_5 + lirs_8 + lirs_10
+# Hurt
+  HRT =~ lirs_1 + lirs_2 + lirs_3 + lirs_4
+# Guilt
+  GLT =~ lirs_6 + lirs_7 + lirs_9 + lirs_14
+
+ # Setting factor variance to 1
+ DET ~~ 1*DET
+ HRT ~~ 1*HRT
+ GLT ~~ 1*GLT
+'
+
+model_bifactor <- '
+  # Czynnik ogólny
+  GF =~ NA*lirs_1 + lirs_2 + lirs_3 + lirs_4 + lirs_5 +
+        lirs_6 + lirs_7 + lirs_8 + lirs_9 + lirs_10 +
+        lirs_11 + lirs_12 + lirs_13 + lirs_14
+  GF ~~ 1*GF
+
+  # Detachement
+  DET =~ NA*lirs_11 + lirs_12 + lirs_13 + lirs_5 + lirs_8 + lirs_10
+  DET ~~ 1*DET
+  # Hurt
+  HRT =~ NA*lirs_1 + lirs_2 + lirs_3 + lirs_4
+  HRT ~~ 1*HRT
+  # Guilt
+  GLT =~ NA*lirs_6 + lirs_7 + lirs_9 + lirs_14
+  GLT ~~ 1*GLT
+
+  # Korelacje między czynnikami specyficznymi i ogólnym
+  GF ~~ 0*DET + 0*HRT + 0*GLT
+  DET ~~ NA*HRT + NA*GLT
+  HRT ~~ NA*GLT
+'
+```
+
+```{r}
+indeksy <- c("chisq.scaled", "df.scaled", "pvalue.scaled", "cfi.robust", "tli.robust", "nfi.scaled", "rmsea.robust", "rmsea.ci.lower.robust", "rmsea.ci.upper.robust", "srmr_bentler_nomean")
+
+dane_lirs_1 <- df_all |> filter(research == "3a")
+
+# Dopasowanie modeli
+fit_one <- lavaan::cfa(
+  model_one,
+  data = dane_lirs_1,
+  estimator = "ML",
+  se = "robust",
+  test = "satorra.bentler"
+)
+fit_multi <- lavaan::cfa(
+  model_multi,
+  data = dane_lirs_1,
+  estimator = "ML",
+  se = "robust",
+  test = "satorra.bentler"
+)
+fit_bifactor <- lavaan::cfa(
+  model_bifactor,
+  data = dane_lirs_1,
+  estimator = "ML",
+  se = "robust",
+  test = "satorra.bentler"
+)
+
+# drugi zbiór
+fit_bifactor_3b <- lavaan::cfa(
+  model_bifactor,
+  data = df_all |> filter(research == "3b"),
+  estimator = "ML",
+  se = "robust",
+  test = "satorra.bentler"
+)
+
+# Zbieranie wskaźników dopasowania
+fit_measures <- function(fit) {
+  lavaan::fitMeasures(fit, indeksy)
+}
+
+results <- tibble::tibble(
+  indeksy = c("Chi2", "df", "p.value","CFI","TLI","NFI","RMSEA","95%CI.l","95%CI.u","SRMR"),  # Dodanie kolumny z nazwami indeksów
+  one = fit_measures(fit_one),
+  multi = fit_measures(fit_multi),
+  bifactor = fit_measures(fit_bifactor),
+  bifactor_3b = fit_measures(fit_bifactor_3b)
+) |> 
+  dplyr::mutate(across(-indeksy, round, 3))    # Zaokrąglanie wszystkich kolumn poza indeksami
+ 
+# Wyświetlanie tabeli
+results |> 
+  kable(
+    caption = "Fit indices in three models",
+    col.names = c("Index", "One factor", "Three factors", "Bifactor","Bifactor")
+    ) |> 
+  add_header_above(c(" " = 1, "PRE (Study 3a)" = 3, "POST (Study 3b)" = 1)) |> 
+  kable_paper()
+```
+
+```{r, sem_plot_params}
+m <- matrix(NA, 14,6)
+m[7,1] <- c("GF")
+m[,4] <- c(
+  "l_11","l_12","l_13","l_5","l_8","l_10",
+  "lr_1","l_2","l_3","l_4",
+  "l_6","l_7","l_9","l_14" )
+m[,6] <- c(NA,NA,"DET",NA,NA,NA,"HRT",NA,NA,NA,"GLT",NA,NA,NA)
+
+my_label_list <- c(
+  lr_1 = "L1",
+  l_2 = "L2",
+  l_3 = "L3",
+  l_4 = "L4",
+  l_5 = "L5",
+  l_6 = "L6",
+  l_7 = "L7",
+  l_8 = "L8",
+  l_9 = "L9",
+  l_10 = "L10",
+  l_11 = "L11",
+  l_12 = "L12",
+  l_13 = "L13",
+  l_14 = "L14"
+)
+
+my_curve_list <- c(
+  "GLT ~~ DET" = 1.4
+)
+```
+
+```{r cfaModels, fig.cap="Ładunki czynnikowe w modelach"}
+#| fig-subcap: 
+#|   - "PRE"
+#|   - "POST"
+#| warning: false
+#| message: false
+#| echo: false
+#| layout-ncol: 2
+semPaths(
+  fit_bifactor,
+  what = "std",
+  whatLabels = "std",
+  edge.label.cex = .9,
+  layout = m,
+  sizeMan = 5,
+  residuals = F, thresholds = F,
+  edge.color = "black",    # wszsytkie strzałki czarne
+  fade = F,                # wszystkie strzałki bez alpha
+  esize = 1,               # wszystkie strzaki równe
+  mar = c(1, 15, 1, 15),
+  DoNotPlot = T # semPath ma nie rysować, bo poniżej są dodatki
+) |> 
+  change_node_label(label_list = my_label_list) |>
+  set_curve(my_curve_list) |> 
+  mark_sig(fit_bifactor) |> 
+  plot()
+
+
+semPaths(
+  fit_bifactor_3b,
+  what = "std",
+  whatLabels = "std",
+  edge.label.cex = .9,
+  layout = m,
+  sizeMan = 5,
+  residuals = F, thresholds = F,
+  edge.color = "black",    # wszsytkie strzałki czarne
+  fade = F,                # wszystkie strzałki bez alpha
+  esize = 1,               # wszystkie strzaki równe
+  mar = c(1, 15, 1, 15),
+  DoNotPlot = T # semPath ma nie rysować, bo poniżej są dodatki
+) |> 
+  change_node_label(label_list = my_label_list) |>
+  set_curve(my_curve_list) |> 
+  mark_sig(fit_bifactor_3b) |> 
+  plot()
+```
+
+
+```{r tbl-ladunki}
+cbind(
+fit_bifactor |> parameterEstimates(standardized = TRUE) |> 
+  filter(op == "=~") |> 
+  select(lhs, rhs, std.all) |> 
+  pivot_wider(id_cols = rhs, names_from = lhs, values_from = std.all) |> 
+  mutate(
+    across(where(is.numeric), ~ ifelse(is.na(.), "", round(.,3))),
+    rhs = rhs |> str_to_upper() |> str_replace(pattern="_", replacement = " ")
+    ),
+fit_bifactor_3b |> parameterEstimates(standardized = TRUE) |> 
+  filter(op == "=~") |> 
+  select(lhs, rhs, std.all) |> 
+  pivot_wider(id_cols = rhs, names_from = lhs, values_from = std.all) |> 
+  mutate(across(where(is.numeric), ~ ifelse(is.na(.), "", round(.,3)))) |> 
+  select(-rhs)
+) |> 
+  kable(
+    caption = "Loadings in bifactorial model for LIRS in Study 3a and 3b",
+    col.names = c("Items", "Total", "Detachment", "Hurt", "Guilt", "Total", "Detachment", "Hurt", "Guilt")
+    ) |> 
+  add_header_above(c(" "=1, "PRE (Study 3a)" = 4, "POST (Study 3b)" = 4)) |> 
+  kable_paper()
+```
+
