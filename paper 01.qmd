@@ -1,19 +1,40 @@
 ---
-title             : "Adaptacja Circular Scale of Interpersonal Values"
-shorttitle        : "Adaptacja CSIV"
-
+title: "Adaptacja Circular Scale of Interpersonal Values"
+subtitle: "Adaptacja CSIV"
+abstract: |
+  One or two sentences providing a **basic introduction** to the field,  comprehensible to a scientist in any discipline.
+  Two to three sentences of **more detailed background**, comprehensible  to scientists in related disciplines.
+  One sentence clearly stating the **general problem** being addressed by  this particular study.
+  One sentence summarizing the main result (with the words "**here we show**" or their equivalent).
+  Two or three sentences explaining what the **main result** reveals in direct comparison to what was thought to be the case previously, or how the  main result adds to previous knowledge.
+  One or two sentences to put the results into a more **general context**.
+  Two or three sentences to provide a **broader perspective**, readily comprehensible to a scientist in any discipline.
+  
+  <!-- https://tinyurl.com/ybremelq -->
+keywords: 
+  - one
+  - two
+  - three
+  
 author: 
   - name          : "Emilia Soroko"
-    affiliation   : "1"
-    corresponding : yes    # Define only one corresponding author
-    address       : "Postal address"
-    email         : "my@email.com"
+    affiliation: 
+        - id: uam
+          name: Adam Mickiewicz University in Poznan
+          department: Wydział Psychologii i Kognitywistyki 
+          postal-code: 60-712
+          address: ul. Wieniawskiego 1
+          city: Poznań
+    note: ORCID 0009-0000-9699-2398
     role: # Contributorship roles (e.g., CRediT, https://credit.niso.org/)
       - "Conceptualization"
       - "Writing - Original Draft Preparation"
       - "Writing - Review & Editing"
-  - name          : "Paweł Kleka"
-    affiliation   : "1,2"
+  - name: Paweł Kleka
+    email: pawel.kleka@amu.edu.pl
+    affiliation: 
+      - ref: uam
+    note: ORCID 0000-0003-0841-0015
     role:
       - "Writing - Review & Editing"
       - "Writing - Original Draft Preparation"
@@ -40,54 +61,29 @@ affiliation:
   - id            : "2"
     institution   : "University of Zielona Gora"
 
-authornote: |
-  The authors declare no conflict of interest.
-
-abstract: |
-  One or two sentences providing a **basic introduction** to the field,  comprehensible to a scientist in any discipline.
-  Two to three sentences of **more detailed background**, comprehensible  to scientists in related disciplines.
-  One sentence clearly stating the **general problem** being addressed by  this particular study.
-  One sentence summarizing the main result (with the words "**here we show**" or their equivalent).
-  Two or three sentences explaining what the **main result** reveals in direct comparison to what was thought to be the case previously, or how the  main result adds to previous knowledge.
-  One or two sentences to put the results into a more **general context**.
-  Two or three sentences to provide a **broader perspective**, readily comprehensible to a scientist in any discipline.
-  
-  <!-- https://tinyurl.com/ybremelq -->
-  
-keywords          : "keywords"
-wordcount         : "X"
-
-bibliography      : "r-references.bib"
-
-floatsintext      : no
-linenumbers       : yes
-draft             : no
-mask              : no
-
-figurelist        : no
-tablelist         : no
-footnotelist      : no
-
+date: last-modified
 format:
-  #apaquarto-docx: default
-  pdf: 
-    pdf-engine: lualatex
-    colorlinks: true
-    linkcolor: darkblue
-    citecolor: darkblue
-    urlcolor: darkblue
-    cite-method: natbib
-    #biblio-style: apalike
-    csl: apa_pl.csl
-    header-includes: |
-      \usepackage{xcolor}
-      \definecolor{darkblue}{RGB}{0,0,139}
+  elsevier-pdf:
+    keep-tex: false
+    journal:
+      name: Czasopismo
+      formatting: review         # review | doubleblind | preprint
+      model: 3p                  # Don't set a model with preprint 1p | 3p | 5p
+      layout: onecolumn          # onecolumn | twocolumn
+      cite-style: authoryear     # number | numbername | super
+      cite-method: citeproc
+      colorlinks: true
+      linkcolor: darkblue
+      citecolor: darkblue
+      urlcolor: darkblue
+    include-in-header: 
+      text: |
+        \newpageafter{author}
+        \usepackage{xcolor}
+        \definecolor{darkblue}{RGB}{0,0,139}
+bibliography: [r-references-LIRS.bib]
 ---
 
-```{r setup, include = FALSE}
-library("papaja")
-r_refs("r-references.bib")
-```
 
 ```{r analysis-preferences}
 # Seed for random number generation
@@ -99,11 +95,9 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 
 ## Introduction
 
-Co z tego zostaje?
+Co z tego zostaje? Zażółć gęślą jaźń
 
-Relationship Assessment Scale (RAS),
-Hypersensitive Narcissism Scale (HSNS), Inventory of Symptom Checklist-27-plus,
-Inwentarz osobowości dla ICD-11 (PiCD), Self and Interpersonal Functioning Scale (SIFS)
+Relationship Assessment Scale (RAS), Hypersensitive Narcissism Scale (HSNS), Inventory of Symptom Checklist-27-plus, Inwentarz osobowości dla ICD-11 (PiCD), Self and Interpersonal Functioning Scale (SIFS)
 
 ## Methods
 
@@ -138,7 +132,7 @@ Authors should not forget that this section is vital when it comes to showcasing
 -->
 ```
 
-We used `r cite_r("r-references.bib")` for all our analyses.
+We used R for all our analyses.
 
 ## Results
 
