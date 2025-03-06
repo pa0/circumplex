@@ -1,0 +1,98 @@
+<!-- 03 -->
+
+```{r}
+n_2 <- nrow(df_all |> filter(research == "2"))
+
+result <- psych::omega(
+  (df_all |> filter(research == "2") |> select(contains("lirs")))[,1:14],
+  nfactors = 3, plot = F
+)
+
+# Wyciągnięcie wartości omega
+omega_value <- result$omega.tot |> round(3)         # Wartość Omega total
+
+# Wartość Alpha Cronbacha
+alpha_det <- alpha(df_all |> 
+                     filter(research == "2") |> 
+                     select(lirs_5, lirs_8, lirs_10, lirs_11, lirs_12, lirs_13)) |>
+  _$total$std.alpha |> round(3)
+alpha_hrt <- alpha(df_all |> 
+                     filter(research == "2") |> 
+                     select(lirs_1, lirs_2, lirs_3, lirs_4)) |>
+  _$total$std.alpha |> round(3)
+alpha_glt <- alpha(df_all |> 
+                     filter(research == "2") |> 
+                     select(lirs_6, lirs_7, lirs_9, lirs_14)) |>
+  _$total$std.alpha |> round(3)
+```
+
+W celu oceny rzetelności wewnętrznej skali LIRS obliczono współczynnik omega McDonalda dla całej skali oraz alfa Cronbacha dla podskal w próbie **Study 2**. Wartość współczynnika McDonald's $\omega_{total}$ dla wyniku ogólnego wyniosła `r omega_value` wskazuje na bardzo wysoka rzetelność całkowitą uwzględniając wariancję zarówno wspólną, jak i specyficzną dla grup czynników. W przypadku podskal wartości współczynnika alfa Cronbacha kształtowały się na poziomie `r alpha_det` dla podskali *Detachment oraz* `r alpha_hrt` dla podskali *Hurt*, co również potwierdza ich zadowalającą rzetelność. Spójność podskali *Guilt* jest nieznacznie poniżej progu .70 i wynosi `r alpha_glt`.
+
+Analizę rzetelności przeprowadzono także dla wyników zebranych w badaniu właściwym (see @tbl-rtt).
+
+```{r tbl-rtt}
+result <- psych::omega(
+  (df_all |> filter(research == "3a") |> select(contains("lirs")))[,1:14],
+  nfactors = 3, plot = F
+)
+
+# Wyciągnięcie wartości omega
+omega_value_3a <- result$omega.tot |> round(3)         # Wartość Omega total
+
+# Wartość Alpha Cronbacha
+alpha_det_3a <- alpha(df_all |> 
+                     filter(research == "3a") |> 
+                     select(lirs_5, lirs_8, lirs_10, lirs_11, lirs_12, lirs_13)) |>
+  _$total$std.alpha |> round(3)
+alpha_hrt_3a <- alpha(df_all |> 
+                     filter(research == "3a") |> 
+                     select(lirs_1, lirs_2, lirs_3, lirs_4)) |>
+  _$total$std.alpha |> round(3)
+alpha_glt_3a <- alpha(df_all |> 
+                     filter(research == "3a") |> 
+                     select(lirs_6, lirs_7, lirs_9, lirs_14)) |>
+  _$total$std.alpha |> round(3)
+
+#######################
+
+result <- psych::omega(
+  (df_all |> filter(research == "3b") |> select(contains("lirs")))[,1:14],
+  nfactors = 3, plot = F
+)
+
+# Wyciągnięcie wartości omega
+omega_value_3b <- result$omega.tot |> round(3)         # Wartość Omega total
+
+# Wartość Alpha Cronbacha
+alpha_det_3b <- alpha(df_all |> 
+                     filter(research == "3b") |> 
+                     select(lirs_5, lirs_8, lirs_10, lirs_11, lirs_12, lirs_13)) |>
+  _$total$std.alpha |> round(3)
+alpha_hrt_3b <- alpha(df_all |> 
+                     filter(research == "3b") |> 
+                     select(lirs_1, lirs_2, lirs_3, lirs_4)) |>
+  _$total$std.alpha |> round(3)
+alpha_glt_3b <- alpha(df_all |> 
+                     filter(research == "3b") |> 
+                     select(lirs_6, lirs_7, lirs_9, lirs_14)) |>
+  _$total$std.alpha |> round(3)
+
+
+# Tworzenie ramki danych z wynikami
+results_table <- data.frame(
+  Parameter = c("Omega Total", "Alpha Detachment", "Alpha Hurt", "Alpha Guilt"),
+  Study_2 = c(omega_value, alpha_det, alpha_hrt, alpha_glt),
+  Study_3a = c(omega_value_3a, alpha_det_3a, alpha_hrt_3a, alpha_glt_3a),
+  Study_3b = c(omega_value_3b, alpha_det_3b, alpha_hrt_3b, alpha_glt_3b)
+)
+
+# Wyświetlenie tabeli
+knitr::kable(
+  results_table, align = "l", 
+  col.names = c("Parameter", "Study 2", "Study 3a", "Study 3b"), 
+  caption = "Porównanie wartości Omega i Alpha Cronbacha dla Study 2, 3a i 3b") |>
+  kable_styling(latex_options = "HOLD_position") |> 
+  kable_paper()
+```
+
+Wyniki te są zgodne z rekomendacjami Nunnally’ego i Bernsteina [-@Nunnally1994], którzy sugerują, że wartości współczynnika alfa Cronbacha powyżej 0.70 świadczą o zadowalającej rzetelności narzędzia. Dodatkowo, zastosowanie współczynnika omega McDonalda, który jest uważany za bardziej odporny na założenia dotyczące struktury danych, potwierdza stabilność wyników. Obniżony wynik podskali *Guilt* jest akceptowalny, zważywszy na to, że skala jest krótka i składa się tylko z 4 pozycji, a grupa badana w Study 2 liczyła tylko `r n_2` osób. Wyniki te sugerują, że skala LIRS charakteryzuje się dość wysoką spójnością wewnętrzną, co uprawnia do jej stosowania w badaniach naukowych.

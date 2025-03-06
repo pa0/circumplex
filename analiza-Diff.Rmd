@@ -1,0 +1,6 @@
+<!-- analiza różnic między płciami, grupami kliniczna i zdrowa -->
+
+```{=html}
+<!-- jakie inne zmienne warto użyć jako grupujące -->
+```
+

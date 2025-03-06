@@ -1,0 +1,161 @@
+<!-- 01 -->
+
+Badana grupa ... (see @tbl-tableOne).
+
+\newpage
+
+```{r}
+#| label: tbl-tableOne
+#| tbl-cap: "Descriptive characterics of study groups"
+#| warning: false
+
+table_one <- CreateTableOne(
+  vars = c(
+    "gender",
+    "age",
+    "education",
+    "martial_state",
+    "relationship",
+    "if_housing_partner",
+    "if_children",
+    "residence",
+    "tenants",
+    "if_pharmacotherapy",
+    "if_psychotherapy_now",
+    "if_somatic_disease",
+    "if_medication",
+    "if_life_event",
+    "if_psychotherapy",
+    "psychotherapy_time",
+    "if_hospital_treatment"
+
+  ),
+  strata = "set",
+  data = dane,
+  test = T,
+  addOverall = T
+)
+
+# Przekształć tabelę do ramki danych
+table_one_df <- print(table_one, printToggle = FALSE)
+
+# Zmień nazwy wierszy
+rownames(table_one_df) <- c(
+  "N",
+  "Gender (%)",
+  "   female",
+  "   male",
+  "   other",
+  "Age [mean (SD)]",
+  "Education (%)",
+  "   basic school",
+  "   vocational",
+  "   middle school",
+  "   undergraduate",
+  "   graduate",
+  "   phd & higher",
+  "Martial state",
+  "   after",
+  "   mariage",
+  "   single",
+  "   unformal",
+  "Relationship",
+  "   no",
+  "   unclear",
+  "   yes",
+  "Housing w partner",
+  "Having children",
+  "Place of living (%)",
+  "   country",
+  "   town",
+  "   city <5k",
+  "   city 5-50k",
+  "   city 50-200k",
+  "   city 200k+",
+  "tenants",
+  "   alone",
+  "   family_kids",
+  "   multigenerational",
+  "   other",
+  "   parents",
+  "   roommates",
+  "if_pharmacotherapy",  # Health
+  "if_psychotherapy_now",
+  "   in the plans",
+  "   no",
+  "   yes",
+  "if_somatic_disease",
+  "if_medication",
+  "if_life_event",
+  "if_psychotherapy",
+  "psychotherapy_time",
+  "if_hospital_treatment"
+)
+
+
+# Wyświetl tabelę z nowymi nazwami wierszy
+table_one_df |> 
+  kableone(
+    #caption = "",  # Tytuł tabeli
+    align = "l"                               # Wyrównanie tekstu w kolumnach (left)
+  ) |> 
+  kableExtra::footnote(
+    general = "Values presented as mean (standard deviation) or number (percentage).",  # Legenda
+    general_title = "Note:",                  # Nagłówek legendy
+    footnote_as_chunk = TRUE                  # Umieść legendę jako blok tekstu
+  ) |> 
+  kableExtra::kable_paper() |> 
+   pack_rows(
+    index = c(
+      " " = 1, "Demographic variables" = 37,  "Health variables" = 11
+    )
+  )
+```
+
+c.d.(see @tbl-tableTwo)
+
+```{r}
+#| label: tbl-tableTwo
+#| tbl-cap: "Characterics of groups change and job activity"
+#| warning: false
+
+table_two <- CreateTableOne(
+  vars = c(
+    "change_selfesteem",
+    "change_work",
+    "change_relationships",
+    "job_activity_study",
+    "job_activity_work",
+    "job_activity_workless",
+    "job_activity_retirement_pension",
+    "job_activity_self_employment",
+    "job_activity_temporary_job",
+    "job_activity_contract_commissioned_work",
+    "job_activity_PhD_study",
+    "job_activity_parental_leave"
+  ),
+  strata = "set",
+  data = dane,
+  test = T
+)
+# Przekształć tabelę do ramki danych
+table_two_df <- print(table_two, printToggle = FALSE)
+# Wyświetl tabelę z nowymi nazwami wierszy
+table_two_df |> 
+  kableone(
+    #caption = "",  # Tytuł tabeli
+    align = "l"                               # Wyrównanie tekstu w kolumnach (left)
+  ) |> 
+  kableExtra::footnote(
+    general = "Values presented as mean (standard deviation) or number (percentage).",  # Legenda
+    general_title = "Note:",                  # Nagłówek legendy
+    footnote_as_chunk = TRUE                  # Umieść legendę jako blok tekstu
+  ) |> 
+  kableExtra::kable_paper() |> 
+   pack_rows(
+    index = c(
+      " " = 1, "Changes in 2 weeks" = 24,  "Job acivities" = 9
+    )
+  )
+```
+

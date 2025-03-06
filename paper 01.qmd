@@ -81,21 +81,37 @@ format:
         \newpageafter{author}
         \usepackage{xcolor}
         \definecolor{darkblue}{RGB}{0,0,139}
-bibliography: [r-references-LIRS.bib]
+bibliography: [references/-literatura.bib, r-references.bib]
 ---
 
 
-```{r analysis-preferences}
+```{r analysis-preferences, include=FALSE, warning=FALSE, message=FALSE}
 # Seed for random number generation
 set.seed(42)
-knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
+knitr::opts_chunk$set(cache.extra = knitr::rand_seed, echo = F)
+
+# wczytanie danych
+load("./dane przeliczone/dane_all.RData")
+
+# załadowanie pakietów
+library(tableone)                  # tabela opisowa
+library(knitr)
+library(kableExtra)                # formatowanie tabeli
+library(psych)                     # rzetelność
+library(lavaan)                    # analiza konfirmacyjna
+library(semPlot)                   # do rysowania modeli
+library(semptools)
+library(tidyverse)
+
+dane$set <- factor(dane$set, levels = 1:3, labels = c("A","B","C"))
+
 ```
 
 <!-- We encourage authors to also consider the opportunity to use online supplementary material to support any of these sections. -->
 
 ## Introduction
 
-Co z tego zostaje? Zażółć gęślą jaźń
+Co z tego zostaje? 
 
 Relationship Assessment Scale (RAS), Hypersensitive Narcissism Scale (HSNS), Inventory of Symptom Checklist-27-plus, Inwentarz osobowości dla ICD-11 (PiCD), Self and Interpersonal Functioning Scale (SIFS)
 
@@ -136,6 +152,13 @@ We used R for all our analyses.
 
 ## Results
 
+### Participants
+
+```{r participants, child = "analiza-TableOne.Rmd"}
+# todo: opisać i skrócić tabelę aby się mieściły ładnie
+# może obrócić?
+```
+
 ```{=html}
 <!-- 
 Zachęcamy autorów do udostępniania surowych danych i kodu lub przekonwertowanych danych punktowych leżących u podstaw głównych ustaleń. Wyjątki mogą być dokonywane (np. ze względu na bezpieczeństwo danych lub poufność), pod warunkiem, że powody zostaną określone podczas składania manuskryptu. Ogólnym założeniem jest to, że każdy badacz powinien być w stanie odtworzyć główne wyniki badania bez kontaktowania się z autorami oryginału. Wymaga to otwartego kodu i otwartych danych. Ponadto zasadniczo powinno być możliwe powtórzenie badania na niezależnej próbie. Wymaga to otwartych materiałów (tj. elementów, instrukcji, konfiguracji badania) lub odniesienia do źródła materiałów.
@@ -144,7 +167,17 @@ Zachęcamy autorów do udostępniania surowych danych i kodu lub przekonwertowan
 
 ### Analiza właściwości psychometrycznych
 
-a\) Analiza trafności (validity)
+a\)  Analiza rzetelności (reliability)
+
+#### Spójność wewnętrzna
+
+współczynnik alfa Cronbacha dla każdej skali/podskali, aby ocenić, czy pozycje są spójne.
+
+```{r rtt_alfa, child = "analiza-Rzetelnosc.Rmd"}
+# ToDo: Agnieszka
+```
+
+b\) Analiza trafności (validity)
 
 Przeprowadzono tłumaczenie z języka angielskiego na polski przez dwóch niezależnych tłumaczy doświadczonych w badaniach naukowych z obszaru psychologii klinicznej. Następnie dokonano uzgodnienie treści i przeprowadzono tłumaczenie wsteczne (na język angielski) przez zewnętrznego eksperta. Przesłano tłumaczenie do wglądu autorów i dokonano konsultacji z autorami narzędzi i uzgodnienie finalnej, polskiej wersji kwestionariusza.
 
@@ -152,32 +185,27 @@ Przeprowadzono tłumaczenie z języka angielskiego na polski przez dwóch niezal
 
 czy pozycje narzędzia są zgodne z teoretycznymi założeniami konstruktu. Zgodność sędziów?
 
-#### Trafność czynnikowa:
+```{r}
+# ToDo: zapytać o proces tłumaczenia
+```
 
-(EFA), aby zweryfikować strukturę czynnikową narzędzia. Czy wyniki są zgodne z oryginalną wersją narzędzia.
-
-Jeśli struktura jest znana (np. z oryginalnej wersji), możesz zastosować analizę czynnikową konfirmacyjną (CFA) w programach takich jak AMOS, LISREL lub R (pakiet lavaan).
 
 #### Trafność zbieżna i różnicowa
 
 Porównać wyniki CSIV i CSIS z innymi narzędziami mierzącymi podobne konstrukty, aby ocenić, czy narzędzie koreluje z tym, z czym powinno.
 
-b)  Analiza rzetelności (reliability)
+```{r korelacje_z_innymi, child="analiza-Cor.Rmd"}
+# ToDo: Agnieszka
+```
 
-#### Spójność wewnętrzna
 
-współczynnik alfa Cronbacha dla każdej skali/podskali, aby ocenić, czy pozycje są spójne.
-
-#### Stabilność
-
-Czy mamy dostęp do danych z pomiaru powtórzonego (test-retest), obliczyć współczynnik korelacji między wynikami z dwóch pomiarów, aby ocenić rzetelność w czasie.
 
 #### Analiza struktury kołowej.
 
 Testowanie, czy pozycje układają się wokół koła zgodnie z teoretycznym modelem.
 
-```{r}
-
+```{r kolowa, child="analiza-Kolo.Rmd"}
+# ToDo: Pawel
 ```
 
 Wizualizacja: wykresy kołowe, aby zwizualizować rozkład wyników.
@@ -189,6 +217,11 @@ Wizualizacja: wykresy kołowe, aby zwizualizować rozkład wyników.
 #### Analiza różnic międzygrupowych
 
 Czy wyniki różnią się w zależności od płci, wieku lub innych zmiennych demograficznych?
+
+```{r roznice, child="analiza-Diff.Rmd"}
+# ToDo: Paweł
+```
+
 
 ## Discussion
 
