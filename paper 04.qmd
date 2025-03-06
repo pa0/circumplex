@@ -1,6 +1,5 @@
 ---
-title: "Uwarunkowania satysfakcji ze związku wynikające z wrażliwości, problemów i wartości
-interpersonalnych."
+title: "Wpływ funkcjonowania ja i relacji interpersonalnych na satysfakcję ze związku w kontekście wrażliwości, problemów i wartości interpersonalnych"
 abstract: |
   One or two sentences providing a **basic introduction** to the field,  comprehensible to a scientist in any discipline.
   Two to three sentences of **more detailed background**, comprehensible  to scientists in related disciplines.
@@ -83,6 +82,7 @@ format:
       layout: onecolumn          # onecolumn | twocolumn
       cite-method: citeproc
       cite-style: authoryear     # number | numbername | authoryear
+      csl: [_extensions/apa_pl.csl]
       colorlinks: true
       linkcolor: darkblue
       citecolor: darkblue
@@ -104,8 +104,6 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 <!-- We encourage authors to also consider the opportunity to use online supplementary material to support any of these sections. -->
 
 ## Introduction
-
-@Acton2004 napisał, a @Hopwood2011 obliczył.
 
 ## Methods
 
@@ -164,4 +162,4 @@ At this point, I would once again like to highlight the option of submitting a r
 
 {{< pagebreak >}}
 
-# References {.unnumbered}
+# References {-}

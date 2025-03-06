@@ -15,9 +15,13 @@ keywords:
   - one
   - two
   - three
+date: last-modified
   
 author: 
   - name          : "Emilia Soroko"
+    attributes:
+        corresponding: true
+    email: emilia.soroko@amu.edu.pl
     affiliation: 
         - id: uam
           name: Adam Mickiewicz University in Poznan
@@ -31,47 +35,55 @@ author:
       - "Writing - Original Draft Preparation"
       - "Writing - Review & Editing"
   - name: Paweł Kleka
-    email: pawel.kleka@amu.edu.pl
     affiliation: 
       - ref: uam
+      - id: uz
+        name: University of Zielona Gora
+        department: Wydział Nauk Społecznych
+        postal-code: 00-000
+        address: ul. Licealna 2
+        city: Zielona Góra
     note: ORCID 0000-0003-0841-0015
     role:
       - "Writing - Review & Editing"
       - "Writing - Original Draft Preparation"
   - name          : "Michał Sieński"
-    affiliation   : "1"
+    affiliation: 
+      - ref: uam
     role:
       - "Writing - Review & Editing"
   - name          : "Marcel Kawczyński"
-    affiliation   : "1"
+    affiliation: 
+      - ref: uam
     role:
       - "Writing - Review & Editing"
   - name          : "Agnieszka Smolnicka"
-    affiliation   : "1"
+    affiliation: 
+      - ref: uam
     role:
       - "Writing - Review & Editing"
   - name          : "Christopher Hopwood"
-    affiliation   : "1"
+    affiliation: 
+      - id: fordham
+        name: Fordham University of New York
+        department: Social Science
+        postal-code: 10033
+        address: Bronx
+        city: New York
     role:
       - "Supervision"
 
-affiliation:
-  - id            : "1"
-    institution   : "Adam Mickiewicz University in Poznan"
-  - id            : "2"
-    institution   : "University of Zielona Gora"
-
-date: last-modified
 format:
   elsevier-pdf:
     keep-tex: false
     journal:
       name: Czasopismo
-      formatting: review         # review | doubleblind | preprint
+      formatting: preprint         # review | doubleblind | preprint
       model: 3p                  # Don't set a model with preprint 1p | 3p | 5p
       layout: onecolumn          # onecolumn | twocolumn
-      cite-style: authoryear     # number | numbername | super
       cite-method: citeproc
+      cite-style: authoryear     # number | numbername | authoryear
+      csl: [_extensions/apa_pl.csl]
       colorlinks: true
       linkcolor: darkblue
       citecolor: darkblue
@@ -81,9 +93,8 @@ format:
         \newpageafter{author}
         \usepackage{xcolor}
         \definecolor{darkblue}{RGB}{0,0,139}
-bibliography: [references/-literatura.bib, r-references.bib]
+bibliography: [../references/-literatura.bib, r-references.bib]
 ---
-
 
 ```{r analysis-preferences, include=FALSE, warning=FALSE, message=FALSE}
 # Seed for random number generation
@@ -111,7 +122,7 @@ dane$set <- factor(dane$set, levels = 1:3, labels = c("A","B","C"))
 
 ## Introduction
 
-Co z tego zostaje? 
+Co z tego zostaje?
 
 Relationship Assessment Scale (RAS), Hypersensitive Narcissism Scale (HSNS), Inventory of Symptom Checklist-27-plus, Inwentarz osobowości dla ICD-11 (PiCD), Self and Interpersonal Functioning Scale (SIFS)
 
@@ -125,7 +136,7 @@ The typical method section should contain information on how data were collected
 -->
 ```
 
-Przeprowadzono  tłumaczenie z języka angielskiego na polski przez dwóch niezależnych tłumaczy doświadczonych w badaniach naukowych z obszaru psychologii klinicznej. Następnie dokonano uzgodnienie treści i przeprowadzono tłumaczenie wsteczne (na język angielski) przez zewnętrznego eksperta. Przesłano tłumaczenie do wglądu autorów i dokonano konsultacji z autorami narzędzi i uzgodnienie finalnej, polskiej wersji kwestionariusza.
+Przeprowadzono tłumaczenie z języka angielskiego na polski przez dwóch niezależnych tłumaczy doświadczonych w badaniach naukowych z obszaru psychologii klinicznej. Następnie dokonano uzgodnienie treści i przeprowadzono tłumaczenie wsteczne (na język angielski) przez zewnętrznego eksperta. Przesłano tłumaczenie do wglądu autorów i dokonano konsultacji z autorami narzędzi i uzgodnienie finalnej, polskiej wersji kwestionariusza.
 
 badania ilościowego na grupie ogólnej za pomocą przetłumaczonej baterii kwestionariuszy: Kołowa Skala Wartości Interpersonalnych, Kołowa Skala Wrażliwości Interpersonalnej, Inwentarz Problemów Interpersonalnych. Dodatkowo osoba badana będę poproszona o wypełnienie kwestionariuszy niezbędnych do badań walidacyjnych, w tym: Inwentarz osobowości dla ICD-11 (PiCD), Self and Interpersonal Functioning Scale (SIFS).
 
@@ -150,7 +161,7 @@ Authors should not forget that this section is vital when it comes to showcasing
 -->
 ```
 
-We used R for all our analyses.
+We used [@R-base] for all our analyses.
 
 ## Results
 
@@ -169,15 +180,13 @@ Zachęcamy autorów do udostępniania surowych danych i kodu lub przekonwertowan
 
 ### Analiza właściwości psychometrycznych
 
-a\)  Analiza rzetelności (reliability)
+a\) Analiza rzetelności (reliability)
 
 #### Spójność wewnętrzna
 
 współczynnik alfa Cronbacha dla każdej skali/podskali, aby ocenić, czy pozycje są spójne.
 
-```{r rtt_alfa, child = "analiza-Rzetelnosc.Rmd"}
-# ToDo: Agnieszka
-```
+`{ rtt_alfa, child = "analiza-Rzetelnosc.Rmd"} # ToDo: Agnieszka`
 
 b\) Analiza trafności (validity)
 
@@ -191,24 +200,17 @@ czy pozycje narzędzia są zgodne z teoretycznymi założeniami konstruktu. Zgod
 # ToDo: zapytać o proces tłumaczenia
 ```
 
-
 #### Trafność zbieżna i różnicowa
 
 Porównać wyniki CSIV i CSIS z innymi narzędziami mierzącymi podobne konstrukty, aby ocenić, czy narzędzie koreluje z tym, z czym powinno.
 
-```{r korelacje_z_innymi, child="analiza-Cor.Rmd"}
-# ToDo: Agnieszka
-```
-
-
+`{ korelacje_z_innymi, child="analiza-Cor.Rmd"} # ToDo: Agnieszka`
 
 #### Analiza struktury kołowej.
 
 Testowanie, czy pozycje układają się wokół koła zgodnie z teoretycznym modelem.
 
-```{r kolowa, child="analiza-Kolo.Rmd"}
-# ToDo: Pawel
-```
+`{ kolowa, child="analiza-Kolo.Rmd"} # ToDo: Pawel`
 
 Wizualizacja: wykresy kołowe, aby zwizualizować rozkład wyników.
 
@@ -220,10 +222,7 @@ Wizualizacja: wykresy kołowe, aby zwizualizować rozkład wyników.
 
 Czy wyniki różnią się w zależności od płci, wieku lub innych zmiennych demograficznych?
 
-```{r roznice, child="analiza-Diff.Rmd"}
-# ToDo: Paweł
-```
-
+`{ roznice, child="analiza-Diff.Rmd"} # ToDo: Paweł`
 
 ## Discussion
 
@@ -239,7 +238,4 @@ At this point, I would once again like to highlight the option of submitting a r
 
 {{< pagebreak >}}
 
-# References
-
-::: {#refs custom-style="Bibliography"}
-:::
+# References {.unnumbered}
