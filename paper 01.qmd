@@ -125,7 +125,9 @@ The typical method section should contain information on how data were collected
 -->
 ```
 
-badania ilościowego na grupie ogólnej za pomocą przetłumaczonej baterii kwestionariuszy: Kołowa Skala Wartości Interpersonalnych, Kołowa Skala Wrażliwości Interpersonalnej, Inwentarz Problemów Interpersonalnych. Dodatkowo osoba badana będę poproszona o wypełnienie kwestionariuszy niezbędnych do badań walidacyjnych, w tym: Relationship Assessment Scale (RAS), Hypersensitive Narcissism Scale (HSNS), Inventory of Symptom Checklist-27-plus, Inwentarz osobowości dla ICD-11 (PiCD), Self and Interpersonal Functioning Scale (SIFS).
+Przeprowadzono  tłumaczenie z języka angielskiego na polski przez dwóch niezależnych tłumaczy doświadczonych w badaniach naukowych z obszaru psychologii klinicznej. Następnie dokonano uzgodnienie treści i przeprowadzono tłumaczenie wsteczne (na język angielski) przez zewnętrznego eksperta. Przesłano tłumaczenie do wglądu autorów i dokonano konsultacji z autorami narzędzi i uzgodnienie finalnej, polskiej wersji kwestionariusza.
+
+badania ilościowego na grupie ogólnej za pomocą przetłumaczonej baterii kwestionariuszy: Kołowa Skala Wartości Interpersonalnych, Kołowa Skala Wrażliwości Interpersonalnej, Inwentarz Problemów Interpersonalnych. Dodatkowo osoba badana będę poproszona o wypełnienie kwestionariuszy niezbędnych do badań walidacyjnych, w tym: Inwentarz osobowości dla ICD-11 (PiCD), Self and Interpersonal Functioning Scale (SIFS).
 
 ### Sample
 
