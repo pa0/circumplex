@@ -1,0 +1,243 @@
+---
+title: "Adaptacja Circular Scale of Interpersonal Values"
+subtitle: "Adaptacja CSIV"
+abstract: |
+  One or two sentences providing a **basic introduction** to the field,  comprehensible to a scientist in any discipline.
+  Two to three sentences of **more detailed background**, comprehensible  to scientists in related disciplines.
+  One sentence clearly stating the **general problem** being addressed by  this particular study.
+  One sentence summarizing the main result (with the words "**here we show**" or their equivalent).
+  Two or three sentences explaining what the **main result** reveals in direct comparison to what was thought to be the case previously, or how the  main result adds to previous knowledge.
+  One or two sentences to put the results into a more **general context**.
+  Two or three sentences to provide a **broader perspective**, readily comprehensible to a scientist in any discipline.
+  
+  <!-- https://tinyurl.com/ybremelq -->
+keywords: 
+  - one
+  - two
+  - three
+  
+author: 
+  - name          : "Emilia Soroko"
+    affiliation: 
+        - id: uam
+          name: Adam Mickiewicz University in Poznan
+          department: Wydział Psychologii i Kognitywistyki 
+          postal-code: 60-712
+          address: ul. Wieniawskiego 1
+          city: Poznań
+    note: ORCID 0009-0000-9699-2398
+    role: # Contributorship roles (e.g., CRediT, https://credit.niso.org/)
+      - "Conceptualization"
+      - "Writing - Original Draft Preparation"
+      - "Writing - Review & Editing"
+  - name: Paweł Kleka
+    email: pawel.kleka@amu.edu.pl
+    affiliation: 
+      - ref: uam
+    note: ORCID 0000-0003-0841-0015
+    role:
+      - "Writing - Review & Editing"
+      - "Writing - Original Draft Preparation"
+  - name          : "Michał Sieński"
+    affiliation   : "1"
+    role:
+      - "Writing - Review & Editing"
+  - name          : "Marcel Kawczyński"
+    affiliation   : "1"
+    role:
+      - "Writing - Review & Editing"
+  - name          : "Agnieszka Smolnicka"
+    affiliation   : "1"
+    role:
+      - "Writing - Review & Editing"
+  - name          : "Christopher Hopwood"
+    affiliation   : "1"
+    role:
+      - "Supervision"
+
+affiliation:
+  - id            : "1"
+    institution   : "Adam Mickiewicz University in Poznan"
+  - id            : "2"
+    institution   : "University of Zielona Gora"
+
+date: last-modified
+format:
+  elsevier-pdf:
+    keep-tex: false
+    journal:
+      name: Czasopismo
+      formatting: review         # review | doubleblind | preprint
+      model: 3p                  # Don't set a model with preprint 1p | 3p | 5p
+      layout: onecolumn          # onecolumn | twocolumn
+      cite-style: authoryear     # number | numbername | super
+      cite-method: citeproc
+      colorlinks: true
+      linkcolor: darkblue
+      citecolor: darkblue
+      urlcolor: darkblue
+    include-in-header: 
+      text: |
+        \newpageafter{author}
+        \usepackage{xcolor}
+        \definecolor{darkblue}{RGB}{0,0,139}
+bibliography: [references/-literatura.bib, r-references.bib]
+---
+
+
+```{r analysis-preferences, include=FALSE, warning=FALSE, message=FALSE}
+# Seed for random number generation
+set.seed(42)
+knitr::opts_chunk$set(cache.extra = knitr::rand_seed, echo = F)
+
+# wczytanie danych
+load("./dane przeliczone/dane_all.RData")
+
+# załadowanie pakietów
+library(tableone)                  # tabela opisowa
+library(knitr)
+library(kableExtra)                # formatowanie tabeli
+library(psych)                     # rzetelność
+library(lavaan)                    # analiza konfirmacyjna
+library(semPlot)                   # do rysowania modeli
+library(semptools)
+library(tidyverse)
+
+dane$set <- factor(dane$set, levels = 1:3, labels = c("A","B","C"))
+
+```
+
+<!-- We encourage authors to also consider the opportunity to use online supplementary material to support any of these sections. -->
+
+## Introduction
+
+Co z tego zostaje? 
+
+Relationship Assessment Scale (RAS), Hypersensitive Narcissism Scale (HSNS), Inventory of Symptom Checklist-27-plus, Inwentarz osobowości dla ICD-11 (PiCD), Self and Interpersonal Functioning Scale (SIFS)
+
+## Methods
+
+<!-- Here we report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. -->
+
+```{=html}
+<!--
+The typical method section should contain information on how data were collected, all measures used, sample demographics, and descriptive statistics for the measures used, as well as a section on the statistical analyses (to be) conducted. Whereas most of these parts are pretty straightforward, the sample section and the analyses section come with specific challenges, especially when writing a registered report.
+-->
+```
+
+badania ilościowego na grupie ogólnej za pomocą przetłumaczonej baterii kwestionariuszy: Kołowa Skala Wartości Interpersonalnych, Kołowa Skala Wrażliwości Interpersonalnej, Inwentarz Problemów Interpersonalnych. Dodatkowo osoba badana będę poproszona o wypełnienie kwestionariuszy niezbędnych do badań walidacyjnych, w tym: Relationship Assessment Scale (RAS), Hypersensitive Narcissism Scale (HSNS), Inventory of Symptom Checklist-27-plus, Inwentarz osobowości dla ICD-11 (PiCD), Self and Interpersonal Functioning Scale (SIFS).
+
+### Sample
+
+```{=html}
+<!--
+Whether the paper is a regular submission or a registered report, sample size needs to be justified. In many cases, rules of thumb for manifest (Schönbrodt & Perugini, 2013) or latent correlations (Kretzschmar & Gignac, 2019) might suffice. However, there may be instances where more specific a priori power analyses might be required and could be a safeguard against replication failures (Open Science Collaboration, 2015). In such cases, authors often refer to simulations. Here, we just want to point out that, while this is certainly advisable in general, there can be serious problems when the simulations are based on inaccurate assumptions (Albers & Lakens, 2018). Thus, each paper, whether registered report or regular, needs to justify the sample size aimed for or actually acquired.
+
+-->
+```
+
+<!-- 21-word solution (Simmons, Nelson & Simonsohn, 2012; retrieved from http://ssrn.com/abstract=2160588) -->
+
+### Statistical Analyses
+
+```{=html}
+<!--
+This section, which is meant to inform the reader about the kind of analyses (to be) conducted and the software used, comes with specific challenges when we adapt or develop tests. In general, during such processes, many decisions need to be made. For example, items might be selected at several stages. Here, the paper needs to accurately inform in detail on decision criteria. In other cases, different reliability estimators could be available (e.g., Cronbach α, McDonald ω, or split half). Here, an explanation of why a certain estimator is used should be provided. All of this shows that the choices for the kind of analyses or estimator used must not only be stated but need to be justified! Importantly, this needs to be done in alignment with the answers provided to the three ABC questions. Thus, a kind of protocol matching the pursued evidence (e.g., criterion-related validity evidence) for psychometric quality to analyses (e.g., correlation, regression, or t-test) and, importantly, the required result(s) (e.g., expected effect size) needs to be defined. This should be especially fastidious when it comes to structural validity evidence. We will highlight this here using the example of structural equation modeling which is often used to provide such evidence. Here, authors should first clearly define their model of choice and, if possible, alternative models. In a next step, they should state how individual models are evaluated and how different models are being compared. Here, I explicitly refer all authors to literature which suggests a more differentiated approach to standard cutoffs for indices such as RMSEA or CFI (e.g., Greiff & Heene, 2017; Heene et al., 2011). Importantly, authors also need to explain what they plan to do (for a registered report) or justify what they did (for a regular submission) when the preferred model did not fit the data. Options might include to delete items, to add correlated residuals, to add crossloadings, or additional latent variables, to name just a few. In a registered report, these choices must be made clear. In all submissions, the consequence of such choices, for example, regarding content validity or unidimensionality (Ziegler & Hagemann, 2015), need to be considered and stated.
+
+Authors should not forget that this section is vital when it comes to showcasing how reliability and validity evidence was obtained and how trustworthy it is. Any deviations from the planned procedure must be explained in a registered report and possible limitations added. In regular submissions, the same holds true when there are deviations from the assumptions laid out in the introduction.
+-->
+```
+
+We used R for all our analyses.
+
+## Results
+
+### Participants
+
+```{r participants, child = "analiza-TableOne.Rmd"}
+# todo: opisać i skrócić tabelę aby się mieściły ładnie
+# może obrócić?
+```
+
+```{=html}
+<!-- 
+Zachęcamy autorów do udostępniania surowych danych i kodu lub przekonwertowanych danych punktowych leżących u podstaw głównych ustaleń. Wyjątki mogą być dokonywane (np. ze względu na bezpieczeństwo danych lub poufność), pod warunkiem, że powody zostaną określone podczas składania manuskryptu. Ogólnym założeniem jest to, że każdy badacz powinien być w stanie odtworzyć główne wyniki badania bez kontaktowania się z autorami oryginału. Wymaga to otwartego kodu i otwartych danych. Ponadto zasadniczo powinno być możliwe powtórzenie badania na niezależnej próbie. Wymaga to otwartych materiałów (tj. elementów, instrukcji, konfiguracji badania) lub odniesienia do źródła materiałów.
+-->
+```
+
+### Analiza właściwości psychometrycznych
+
+a\)  Analiza rzetelności (reliability)
+
+#### Spójność wewnętrzna
+
+współczynnik alfa Cronbacha dla każdej skali/podskali, aby ocenić, czy pozycje są spójne.
+
+```{r rtt_alfa, child = "analiza-Rzetelnosc.Rmd"}
+# ToDo: Agnieszka
+```
+
+b\) Analiza trafności (validity)
+
+Przeprowadzono tłumaczenie z języka angielskiego na polski przez dwóch niezależnych tłumaczy doświadczonych w badaniach naukowych z obszaru psychologii klinicznej. Następnie dokonano uzgodnienie treści i przeprowadzono tłumaczenie wsteczne (na język angielski) przez zewnętrznego eksperta. Przesłano tłumaczenie do wglądu autorów i dokonano konsultacji z autorami narzędzi i uzgodnienie finalnej, polskiej wersji kwestionariusza.
+
+#### Trafność teoretyczna (treściowa):
+
+czy pozycje narzędzia są zgodne z teoretycznymi założeniami konstruktu. Zgodność sędziów?
+
+```{r}
+# ToDo: zapytać o proces tłumaczenia
+```
+
+
+#### Trafność zbieżna i różnicowa
+
+Porównać wyniki CSIV i CSIS z innymi narzędziami mierzącymi podobne konstrukty, aby ocenić, czy narzędzie koreluje z tym, z czym powinno.
+
+```{r korelacje_z_innymi, child="analiza-Cor.Rmd"}
+# ToDo: Agnieszka
+```
+
+
+
+#### Analiza struktury kołowej.
+
+Testowanie, czy pozycje układają się wokół koła zgodnie z teoretycznym modelem.
+
+```{r kolowa, child="analiza-Kolo.Rmd"}
+# ToDo: Pawel
+```
+
+Wizualizacja: wykresy kołowe, aby zwizualizować rozkład wyników.
+
+```{r}
+
+```
+
+#### Analiza różnic międzygrupowych
+
+Czy wyniki różnią się w zależności od płci, wieku lub innych zmiennych demograficznych?
+
+```{r roznice, child="analiza-Diff.Rmd"}
+# ToDo: Paweł
+```
+
+
+## Discussion
+
+```{=html}
+<!--
+Within this section, the evidence obtained should be evaluated with regard to the requirements formulated in the introduction. As a result, clear recommendations should be listed. This refers to whether the measured score(s) can be interpreted as intended.
+
+These, in places detailed, elaborations should be understood as a kind of template. Submissions will be expected to follow the structure laid out here and to provide the information outlined (or explain the lack of it). There will be a formal check of each submission, and divergences from this template may result in the paper being send back with a request for closer alignment with the template. Please keep in mind that in doing this we aim to help both readers and reviewers – and also our authors because the chances of a fast peer review process and of the paper being cited later on should improve substantially!
+
+At this point, I would once again like to highlight the option of submitting a registered report. Planning a test translation or adaptation will, we hope, be facilitated by following these guidelines – the template can be used in the sense of a checklist. Moreover, the opportunity to obtain timely feedback, before data are being collected, should allow us to weed out problems or even critical flaws that otherwise could not be undone later. This in turn should bolster the paper’s final quality.
+-->
+```
+
+{{< pagebreak >}}
+
+# References
+
+::: {#refs custom-style="Bibliography"}
+:::
