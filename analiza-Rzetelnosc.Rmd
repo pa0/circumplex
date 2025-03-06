@@ -1,5 +1,7 @@
 <!-- 03 -->
 
+<!-- Oprócz 3 kołowoych tylko ICD11 i SISF -->
+
 ```{r}
 n_2 <- nrow(df_all |> filter(research == "2"))
 
@@ -95,4 +97,4 @@ knitr::kable(
   kable_paper()
 ```
 
-Wyniki te są zgodne z rekomendacjami Nunnally’ego i Bernsteina [-@Nunnally1994], którzy sugerują, że wartości współczynnika alfa Cronbacha powyżej 0.70 świadczą o zadowalającej rzetelności narzędzia. Dodatkowo, zastosowanie współczynnika omega McDonalda, który jest uważany za bardziej odporny na założenia dotyczące struktury danych, potwierdza stabilność wyników. Obniżony wynik podskali *Guilt* jest akceptowalny, zważywszy na to, że skala jest krótka i składa się tylko z 4 pozycji, a grupa badana w Study 2 liczyła tylko `r n_2` osób. Wyniki te sugerują, że skala LIRS charakteryzuje się dość wysoką spójnością wewnętrzną, co uprawnia do jej stosowania w badaniach naukowych.
+Wyniki te są zgodne z rekomendacjami Nunnally’ego i Bernsteina [-@Nunnally1994], którzy sugerują, że wartości współczynnika alfa Cronbacha powyżej 0.70 świadczą o zadowalającej rzetelności narzędzia. Dodatkowo, zastosowanie współczynnika omega McDonalda, który jest uważany za bardziej odporny na założenia dotyczące struktury danych, potwierdza stabilność wyników.

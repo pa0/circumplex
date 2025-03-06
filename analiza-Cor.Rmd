@@ -1,5 +1,7 @@
 <!-- 04 -->
 
+<!-- Oprócz 3 kołowoych tylko ICD11 i SISF -->
+
 Korelacje między konstruktami, które potwierdzają zbieżny i różnicowy aspekt trafności.
 
 

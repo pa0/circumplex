@@ -1,6 +1,5 @@
 ---
-title: "Uwarunkowania satysfakcji ze związku wynikające z wrażliwości, problemów i wartości
-interpersonalnych."
+title: "Porównanie grupy klinicznej i ogólnej"
 abstract: |
   One or two sentences providing a **basic introduction** to the field,  comprehensible to a scientist in any discipline.
   Two to three sentences of **more detailed background**, comprehensible  to scientists in related disciplines.
@@ -105,8 +104,6 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 
 ## Introduction
 
-@Acton2004 napisał, a @Hopwood2011 obliczył.
-
 ## Methods
 
 <!-- Here we report how we determined our sample size, all data exclusions (if any), all manipulations, and all measures in the study. -->
@@ -164,4 +161,4 @@ At this point, I would once again like to highlight the option of submitting a r
 
 {{< pagebreak >}}
 
-# References {.unnumbered}
+# References {-}

@@ -1,4 +1,6 @@
-<!-- analiza struktury kołowej -->
+<!-- analiza struktury kołowej 
+Circumplex Scales of Interpersonal Values (CSIV); Interpersonal Sensitivity Circumplex (ISC); Inventory of Interpersonal Problems (IIP-C)
+-->
 
 Analiza eksploracyjna
 
