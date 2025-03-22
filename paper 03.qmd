@@ -4,84 +4,89 @@ shorttitle        : "Adaptacja CSIV"
 
 author: 
   - name          : "Emilia Soroko"
-    affiliation   : "1"
-    corresponding : yes    # Define only one corresponding author
-    address       : "Postal address"
-    email         : "my@email.com"
+    email: emilia.soroko@amu.edu.pl
+    note: ORCID 0009-0000-9699-2398
     role: # Contributorship roles (e.g., CRediT, https://credit.niso.org/)
       - "Conceptualization"
       - "Writing - Original Draft Preparation"
       - "Writing - Review & Editing"
-  - name          : "Paweł Kleka"
-    affiliation   : "1,2"
+    affiliations:
+       - id: uam
+         name: "Adam Mickiewicz University in Poznan"
+         department: "Wydział Psychologii i Kognitywistyki"
+         postal-code: "60-712"
+         address: "ul. Wieniawskiego 1"
+         city: "Poznań"
+    attributes:
+        corresponding: true
+
+  - name          : Paweł Kleka
+    email: pawel.kleka@amu.edu.pl
+    note: ORCID 0000-0003-0841-0015
     role:
+      - "Analysis"
       - "Writing - Review & Editing"
       - "Writing - Original Draft Preparation"
+    affiliations:
+      - ref: uam
+      - id: uz
+        name: "University of Zielona Gora"
+        department: "Wydział Nauk Społecznych"
+        postal-code: "55-040"
+        address: "ul. Licealna 2"
+        city: "Zielona Gora"
+
   - name          : "Michał Sieński"
-    affiliation   : "1"
+    affiliations:
+        - ref: uam
     role:
       - "Writing - Review & Editing"
+      
   - name          : "Marcel Kawczyński"
-    affiliation   : "1"
+    affiliations:
+        - ref: uam
     role:
       - "Writing - Review & Editing"
+      
   - name          : "Agnieszka Smolnicka"
-    affiliation   : "1"
+    affiliations:
+        - ref: uam
     role:
+      - "data curation"
       - "Writing - Review & Editing"
+      
   - name          : "Christopher Hopwood"
-    affiliation   : "1"
+    affiliations:
+      - id: fu
+        name: "Fordham University"
+        department: "Department of Psychology"
+        postal-code: "10458"
+        address: "441 E. Fordham Road"
+        city: "Bronx"
     role:
       - "Supervision"
 
-affiliation:
-  - id            : "1"
-    institution   : "Adam Mickiewicz University in Poznan"
-  - id            : "2"
-    institution   : "University of Zielona Gora"
-
-authornote: |
-  The authors declare no conflict of interest.
-
-abstract: |
-  One or two sentences providing a **basic introduction** to the field,  comprehensible to a scientist in any discipline.
-  Two to three sentences of **more detailed background**, comprehensible  to scientists in related disciplines.
-  One sentence clearly stating the **general problem** being addressed by  this particular study.
-  One sentence summarizing the main result (with the words "**here we show**" or their equivalent).
-  Two or three sentences explaining what the **main result** reveals in direct comparison to what was thought to be the case previously, or how the  main result adds to previous knowledge.
-  One or two sentences to put the results into a more **general context**.
-  Two or three sentences to provide a **broader perspective**, readily comprehensible to a scientist in any discipline.
-  
-  <!-- https://tinyurl.com/ybremelq -->
-  
-keywords          : "keywords"
-wordcount         : "X"
-
-bibliography      : "r-references.bib"
-
-floatsintext      : no
-linenumbers       : yes
-draft             : no
-mask              : no
-
-figurelist        : no
-tablelist         : no
-footnotelist      : no
-
+date: last-modified
 format:
-  #apaquarto-docx: default
-  pdf: 
-    pdf-engine: lualatex
-    colorlinks: true
-    linkcolor: darkblue
-    citecolor: darkblue
-    urlcolor: darkblue
-    cite-method: natbib
-    #biblio-style: apalike
-    csl: apa_pl.csl
-    header-includes: |
-      \usepackage{xcolor}
-      \definecolor{darkblue}{RGB}{0,0,139}
+  elsevier-pdf:
+    keep-tex: false
+    journal:
+      name: Czasopismo
+      formatting: review         # review | doubleblind | preprint
+      model: 3p                  # Don't set a model with preprint 1p | 3p | 5p
+      layout: onecolumn          # onecolumn | twocolumn
+      cite-style: authoryear     # number | numbername | super
+      cite-method: citeproc
+      colorlinks: true
+      linkcolor: darkblue
+      citecolor: darkblue
+      urlcolor: darkblue
+    include-in-header: 
+      text: |
+        \newpageafter{author}
+        \usepackage{xcolor}
+        \definecolor{darkblue}{RGB}{0,0,139}
+bibliography: [../references/-literatura.bib, r-references.bib]
 ---
 
 ```{r setup, include = FALSE}

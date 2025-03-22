@@ -18,48 +18,67 @@ keywords:
   
 author: 
   - name          : "Emilia Soroko"
-    affiliation: 
-        - id: uam
-          name: Adam Mickiewicz University in Poznan
-          department: Wydział Psychologii i Kognitywistyki 
-          postal-code: 60-712
-          address: ul. Wieniawskiego 1
-          city: Poznań
+    email: emilia.soroko@amu.edu.pl
     note: ORCID 0009-0000-9699-2398
     role: # Contributorship roles (e.g., CRediT, https://credit.niso.org/)
       - "Conceptualization"
       - "Writing - Original Draft Preparation"
       - "Writing - Review & Editing"
-  - name: Paweł Kleka
+    affiliations:
+       - id: uam
+         name: "Adam Mickiewicz University in Poznan"
+         department: "Wydział Psychologii i Kognitywistyki"
+         postal-code: "60-712"
+         address: "ul. Wieniawskiego 1"
+         city: "Poznań"
+    attributes:
+        corresponding: true
+
+  - name          : Paweł Kleka
     email: pawel.kleka@amu.edu.pl
-    affiliation: 
-      - ref: uam
     note: ORCID 0000-0003-0841-0015
     role:
+      - "Analysis"
       - "Writing - Review & Editing"
       - "Writing - Original Draft Preparation"
+    affiliations:
+      - ref: uam
+      - id: uz
+        name: "University of Zielona Gora"
+        department: "Wydział Nauk Społecznych"
+        postal-code: "55-040"
+        address: "ul. Licealna 2"
+        city: "Zielona Gora"
+
   - name          : "Michał Sieński"
-    affiliation   : "1"
+    affiliations:
+        - ref: uam
     role:
       - "Writing - Review & Editing"
+      
   - name          : "Marcel Kawczyński"
-    affiliation   : "1"
+    affiliations:
+        - ref: uam
     role:
       - "Writing - Review & Editing"
+      
   - name          : "Agnieszka Smolnicka"
-    affiliation   : "1"
+    affiliations:
+        - ref: uam
     role:
+      - "data curation"
       - "Writing - Review & Editing"
+      
   - name          : "Christopher Hopwood"
-    affiliation   : "1"
+    affiliations:
+      - id: fu
+        name: "Fordham University"
+        department: "Department of Psychology"
+        postal-code: "10458"
+        address: "441 E. Fordham Road"
+        city: "Bronx"
     role:
       - "Supervision"
-
-affiliation:
-  - id            : "1"
-    institution   : "Adam Mickiewicz University in Poznan"
-  - id            : "2"
-    institution   : "University of Zielona Gora"
 
 date: last-modified
 format:
@@ -81,7 +100,7 @@ format:
         \newpageafter{author}
         \usepackage{xcolor}
         \definecolor{darkblue}{RGB}{0,0,139}
-bibliography: [references/-literatura.bib, r-references.bib]
+bibliography: [../references/-literatura.bib, r-references.bib]
 ---
 
 
@@ -103,13 +122,13 @@ library(semPlot)                   # do rysowania modeli
 library(semptools)
 library(tidyverse)
 
-dane$set <- factor(dane$set, levels = 1:3, labels = c("A","B","C"))
-
 ```
 
 <!-- We encourage authors to also consider the opportunity to use online supplementary material to support any of these sections. -->
 
 ## Introduction
+
+The circumplex model is a popular approach in personality and social psychology for representing data in a circular structure (Fabrigar et al., 1997). It has been applied to various domains, including personality, affect, and vocational interests (Gurtman & Pincus, 2003). Researchers have developed methods to evaluate circumplex structure, describe individuals and groups, and assess constructs using this model (Gurtman & Pincus, 2003). Several psychometric criteria have been proposed to test for circumplex properties, with some proving more effective than others (Acton et al., 2004). Circular statistics and the structural summary method are complementary techniques for analyzing group-level circumplex data, offering information on substantive themes, group homogeneity, and profile characteristics (Wright et al., 2009). These methods provide researchers with tools to optimize circumplex description and comparison of groups, allowing for more comprehensive analysis in various domains where circumplex models are utilized (Wright et al., 2009).
 
 Co z tego zostaje? 
 
@@ -155,9 +174,9 @@ We used R for all our analyses.
 ### Participants
 
 ```{r participants, child = "analiza-TableOne.Rmd"}
-# todo: opisać i skrócić tabelę aby się mieściły ładnie
-# może obrócić?
+
 ```
+
 
 ```{=html}
 <!-- 
@@ -173,7 +192,7 @@ a\)  Analiza rzetelności (reliability)
 
 współczynnik alfa Cronbacha dla każdej skali/podskali, aby ocenić, czy pozycje są spójne.
 
-```{r rtt_alfa, child = "analiza-Rzetelnosc.Rmd"}
+```{ rtt_alfa, child = "analiza-Rzetelnosc.Rmd"}
 # ToDo: Agnieszka
 ```
 
@@ -194,7 +213,7 @@ czy pozycje narzędzia są zgodne z teoretycznymi założeniami konstruktu. Zgod
 
 Porównać wyniki CSIV i CSIS z innymi narzędziami mierzącymi podobne konstrukty, aby ocenić, czy narzędzie koreluje z tym, z czym powinno.
 
-```{r korelacje_z_innymi, child="analiza-Cor.Rmd"}
+```{ korelacje_z_innymi, child="analiza-Cor.Rmd"}
 # ToDo: Agnieszka
 ```
 
@@ -204,7 +223,7 @@ Porównać wyniki CSIV i CSIS z innymi narzędziami mierzącymi podobne konstruk
 
 Testowanie, czy pozycje układają się wokół koła zgodnie z teoretycznym modelem.
 
-```{r kolowa, child="analiza-Kolo.Rmd"}
+```{ kolowa, child="analiza-Kolo.Rmd"}
 # ToDo: Pawel
 ```
 
@@ -218,7 +237,7 @@ Wizualizacja: wykresy kołowe, aby zwizualizować rozkład wyników.
 
 Czy wyniki różnią się w zależności od płci, wieku lub innych zmiennych demograficznych?
 
-```{r roznice, child="analiza-Diff.Rmd"}
+```{ roznice, child="analiza-Diff.Rmd"}
 # ToDo: Paweł
 ```
 

@@ -1,4 +1,8 @@
 <!-- 01 -->
+<!-- 
+# todo: opisać i skrócić tabelę aby się mieściły ładnie
+# może obrócić?
+-->
 
 Badana grupa ... (see @tbl-tableOne).
 
