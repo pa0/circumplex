@@ -211,7 +211,7 @@ czy pozycje narzędzia są zgodne z teoretycznymi założeniami konstruktu. Zgod
 
 #### Trafność zbieżna i różnicowa
 
-Porównać wyniki CSIV i CSIS z innymi narzędziami mierzącymi podobne konstrukty, aby ocenić, czy narzędzie koreluje z tym, z czym powinno.
+Porównać wyniki CSIV z innymi narzędziami mierzącymi podobne konstrukty, aby ocenić, czy narzędzie koreluje z tym, z czym powinno.
 
 ```{ korelacje_z_innymi, child="analiza-Cor.Rmd"}
 # ToDo: Agnieszka
