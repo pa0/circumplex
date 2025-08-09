@@ -464,6 +464,7 @@ dane = dane %>%
 ```{r}
 
 # Obliczenie wyników podskal
+# wybrane jako lepsze itemy: CSIV_60b IPC_13a ISC_31b ISC_63b
 
 dane = dane %>%
   mutate(ISC_31a = ordered(ISC_31),

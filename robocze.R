@@ -1,4 +1,6 @@
 # Porównanie  "CSIV_60b", "IIPC.1_13b", "ISC_31b", "ISC_63b"                
+# wybrane jako lepsze itemy: CSIV_60b IPC_13a ISC_31b ISC_63b
+
 
 ## 1
 
