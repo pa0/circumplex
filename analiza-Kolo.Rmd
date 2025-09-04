@@ -10,7 +10,7 @@ Aby sprawdzić, czy struktura **Circular Scale of Interpersonal Values (CSIV)** 
 
 ```{r}
 # Przykład załadowania danych
-data <- read.csv("twoje_dane.csv")
+data <- dane |> dplyr::select(matches("CSIV.*[0-9]$"))
 
 # Sprawdź strukturę danych
 str(data)

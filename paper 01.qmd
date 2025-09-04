@@ -82,6 +82,7 @@ author:
 
 date: last-modified
 format:
+  html: default
   elsevier-pdf:
     keep-tex: false
     journal:
@@ -105,9 +106,28 @@ bibliography: [../references/-literatura.bib, r-references.bib]
 
 
 ```{r analysis-preferences, include=FALSE, warning=FALSE, message=FALSE}
+rm(list=ls())
+#cat(getwd())
+knitr::opts_chunk$set(
+  root.dir = here::here(),
+  echo = F,
+  warning = F,
+  message = F,
+  eval = T,
+  comment = '',
+  fig.width = 7,
+  fig.height = 5,
+  fig.align = 'center',
+  dev = "svg",
+  dpi = 300,
+  cache = TRUE,
+  cache.extra = knitr::rand_seed
+)
+pdf.options(encoding = "CP1250.enc")                                 # polskie znaki na wykresach
+options(knitr.kable.digits = 2, knitr.kable.na = '')
+
 # Seed for random number generation
 set.seed(42)
-knitr::opts_chunk$set(cache.extra = knitr::rand_seed, echo = F)
 
 # wczytanie danych
 load("./dane przeliczone/dane_all.RData")
@@ -123,6 +143,13 @@ library(semptools)
 library(tidyverse)
 
 ```
+
+```{r}
+# korekty na danych
+dane |> 
+  mutate(across(all_of(c("change_selfesteem", "change_work", "change_relationships")), as.numeric)) -> dane
+```
+
 
 <!-- We encourage authors to also consider the opportunity to use online supplementary material to support any of these sections. -->
 
@@ -174,14 +201,6 @@ We used R for all our analyses.
 ### Participants
 
 ```{r participants, child = "analiza-TableOne.Rmd"}
-
-```
-
-
-```{=html}
-<!-- 
-Zachęcamy autorów do udostępniania surowych danych i kodu lub przekonwertowanych danych punktowych leżących u podstaw głównych ustaleń. Wyjątki mogą być dokonywane (np. ze względu na bezpieczeństwo danych lub poufność), pod warunkiem, że powody zostaną określone podczas składania manuskryptu. Ogólnym założeniem jest to, że każdy badacz powinien być w stanie odtworzyć główne wyniki badania bez kontaktowania się z autorami oryginału. Wymaga to otwartego kodu i otwartych danych. Ponadto zasadniczo powinno być możliwe powtórzenie badania na niezależnej próbie. Wymaga to otwartych materiałów (tj. elementów, instrukcji, konfiguracji badania) lub odniesienia do źródła materiałów.
--->
 ```
 
 ### Analiza właściwości psychometrycznych
