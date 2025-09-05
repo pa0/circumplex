@@ -1,98 +1,153 @@
-<!-- 03 -->
+<!-- 03 
+Współczynnik omega dla każdej skali i alfa Cronbacha dla każdej podskali, aby ocenić, czy pozycje są spójne.
+-->
 
 ```{r}
-n_2 <- nrow(df_all |> filter(research == "2"))
+#| eval: false
+# niepotrzebne - jest w TableOne
+researchs_n = dane %>%
+  group_by(set) %>%
+  count() %>%
+  pull(n, name = set)
+n = sum(researchs_n)
 
-result <- psych::omega(
-  (df_all |> filter(research == "2") |> select(contains("lirs")))[,1:14],
-  nfactors = 3, plot = F
-)
+c(researchs_n, total = n)
 
-# Wyciągnięcie wartości omega
-omega_value <- result$omega.tot |> round(3)         # Wartość Omega total
-
-# Wartość Alpha Cronbacha
-alpha_det <- alpha(df_all |> 
-                     filter(research == "2") |> 
-                     select(lirs_5, lirs_8, lirs_10, lirs_11, lirs_12, lirs_13)) |>
-  _$total$std.alpha |> round(3)
-alpha_hrt <- alpha(df_all |> 
-                     filter(research == "2") |> 
-                     select(lirs_1, lirs_2, lirs_3, lirs_4)) |>
-  _$total$std.alpha |> round(3)
-alpha_glt <- alpha(df_all |> 
-                     filter(research == "2") |> 
-                     select(lirs_6, lirs_7, lirs_9, lirs_14)) |>
-  _$total$std.alpha |> round(3)
 ```
 
-W celu oceny rzetelności wewnętrznej skali LIRS obliczono współczynnik omega McDonalda dla całej skali oraz alfa Cronbacha dla podskal w próbie **Study 2**. Wartość współczynnika McDonald's $\omega_{total}$ dla wyniku ogólnego wyniosła `r omega_value` wskazuje na bardzo wysoka rzetelność całkowitą uwzględniając wariancję zarówno wspólną, jak i specyficzną dla grup czynników. W przypadku podskal wartości współczynnika alfa Cronbacha kształtowały się na poziomie `r alpha_det` dla podskali *Detachment oraz* `r alpha_hrt` dla podskali *Hurt*, co również potwierdza ich zadowalającą rzetelność. Spójność podskali *Guilt* jest nieznacznie poniżej progu .70 i wynosi `r alpha_glt`.
+```{r}
+#| message: false
+#| warning: false
 
-Analizę rzetelności przeprowadzono także dla wyników zebranych w badaniu właściwym (see @tbl-rtt).
+# Nazwy skal i podskal oraz kierunek w kluczu
+get_subscales = function(scale){
+  codebook %>%
+    filter(str_sub(eng2, 1, str_length(scale)) == scale) %>%
+    pull(key) %>%
+    str_remove('-') %>% unique() %>% sort()
+  }
 
-```{r tbl-rtt}
-result <- psych::omega(
-  (df_all |> filter(research == "3a") |> select(contains("lirs")))[,1:14],
-  nfactors = 3, plot = F
-)
+scales = c('CSIV', 'IIPC', 'ISC', 'PICD', 'HSNS', 'IJZ', 'SIFS', 'RAS', 'SCL')
+subscales_list = sapply(scales, get_subscales)
+scales_factors = sapply(subscales_list, length)
 
-# Wyciągnięcie wartości omega
-omega_value_3a <- result$omega.tot |> round(3)         # Wartość Omega total
+#list2env(subscales_list, envir = .GlobalEnv)
 
-# Wartość Alpha Cronbacha
-alpha_det_3a <- alpha(df_all |> 
-                     filter(research == "3a") |> 
-                     select(lirs_5, lirs_8, lirs_10, lirs_11, lirs_12, lirs_13)) |>
-  _$total$std.alpha |> round(3)
-alpha_hrt_3a <- alpha(df_all |> 
-                     filter(research == "3a") |> 
-                     select(lirs_1, lirs_2, lirs_3, lirs_4)) |>
-  _$total$std.alpha |> round(3)
-alpha_glt_3a <- alpha(df_all |> 
-                     filter(research == "3a") |> 
-                     select(lirs_6, lirs_7, lirs_9, lirs_14)) |>
-  _$total$std.alpha |> round(3)
-
-#######################
-
-result <- psych::omega(
-  (df_all |> filter(research == "3b") |> select(contains("lirs")))[,1:14],
-  nfactors = 3, plot = F
-)
-
-# Wyciągnięcie wartości omega
-omega_value_3b <- result$omega.tot |> round(3)         # Wartość Omega total
-
-# Wartość Alpha Cronbacha
-alpha_det_3b <- alpha(df_all |> 
-                     filter(research == "3b") |> 
-                     select(lirs_5, lirs_8, lirs_10, lirs_11, lirs_12, lirs_13)) |>
-  _$total$std.alpha |> round(3)
-alpha_hrt_3b <- alpha(df_all |> 
-                     filter(research == "3b") |> 
-                     select(lirs_1, lirs_2, lirs_3, lirs_4)) |>
-  _$total$std.alpha |> round(3)
-alpha_glt_3b <- alpha(df_all |> 
-                     filter(research == "3b") |> 
-                     select(lirs_6, lirs_7, lirs_9, lirs_14)) |>
-  _$total$std.alpha |> round(3)
-
-
-# Tworzenie ramki danych z wynikami
-results_table <- data.frame(
-  Parameter = c("Omega Total", "Alpha Detachment", "Alpha Hurt", "Alpha Guilt"),
-  Study_2 = c(omega_value, alpha_det, alpha_hrt, alpha_glt),
-  Study_3a = c(omega_value_3a, alpha_det_3a, alpha_hrt_3a, alpha_glt_3a),
-  Study_3b = c(omega_value_3b, alpha_det_3b, alpha_hrt_3b, alpha_glt_3b)
-)
-
-# Wyświetlenie tabeli
-knitr::kable(
-  results_table, align = "l", 
-  col.names = c("Parameter", "Study 2", "Study 3a", "Study 3b"), 
-  caption = "Porównanie wartości Omega i Alpha Cronbacha dla Study 2, 3a i 3b") |>
-  kable_styling(latex_options = "HOLD_position") |> 
-  kable_paper()
 ```
 
-Wyniki te są zgodne z rekomendacjami Nunnally’ego i Bernsteina [-@Nunnally1994], którzy sugerują, że wartości współczynnika alfa Cronbacha powyżej 0.70 świadczą o zadowalającej rzetelności narzędzia. Dodatkowo, zastosowanie współczynnika omega McDonalda, który jest uważany za bardziej odporny na założenia dotyczące struktury danych, potwierdza stabilność wyników. Obniżony wynik podskali *Guilt* jest akceptowalny, zważywszy na to, że skala jest krótka i składa się tylko z 4 pozycji, a grupa badana w Study 2 liczyła tylko `r n_2` osób. Wyniki te sugerują, że skala LIRS charakteryzuje się dość wysoką spójnością wewnętrzną, co uprawnia do jej stosowania w badaniach naukowych.
+
+```{r}
+# Funkcje do liczenia wskaźników rzetelności
+compute_omega = function(scale) {
+  if (scales_factors[scale] == 1) {
+    psych::alpha(
+      dane %>%
+        select(matches(str_c(
+          scale, '.*\\d+$'
+        )), -SCL_20) %>%
+        mutate(across(everything(), as.integer)) %>%
+        janitor::remove_empty(which = 'rows')
+    )$total$std.alpha |> round(2)
+    
+  } else {
+    psych::omega(
+      dane %>%
+        select(matches(str_c(
+          scale, '.*\\d+$'
+        )), -SCL_20) %>%
+        mutate(across(everything(), as.integer)) %>%
+        janitor::remove_empty(which = 'rows'),
+      
+      key = codebook |> filter(str_sub(eng2, 1, str_length(scale)) == scale) |>
+        filter(!str_detect(eng2, "\\d+(a|b)$")) |>
+        pull(key) %>% grepl("-", .) %>%
+        ifelse(., -1, 1),
+      
+      fm = "minres",
+      nfactors = scales_factors[scale],
+      plot = FALSE
+    )$omega.tot |> round(2)
+  }
+}
+
+
+compute_alpha_sub = function(scale, subscale) {
+  if ((codebook %>% filter(str_sub(eng2, 1, str_length(scale)) == scale &
+                           key == !!subscale) %>% nrow()) > 1) {
+    psych::alpha(
+      dane %>%
+        select(
+          codebook %>%
+            filter(str_sub(eng2, 1, str_length(scale)) == scale &
+                     key == !!subscale) %>%
+            pull(eng2),-matches('\\d+(a|b)$')
+        ) %>%
+        mutate(across(everything(), as.integer)) %>%
+        janitor::remove_empty(which = 'rows'),
+      # uwzględnia kierunek kodowania
+      keys = names(dane)[which(grepl("-", codebook |> filter((key |> str_remove('-')) == subscale) |> select(key) |> pull(key)))]
+    )$total$std.alpha |> round(2)
+  } else {NA}
+}
+```
+
+
+```{r, message=F, warning=F}
+
+# Wartość Omega
+
+omega_scales = sapply(scales, compute_omega)
+cat("Wartości omega\n")
+omega_scales
+
+# IJZ       - An ultra-Heywood case was detected. Examine the results carefull; diag(.) had 0 or NA entries; non-finite result is doubtful
+
+# IJZ, CSIV - The estimated weights for the factor scores are probably incorrect. Try a different factor score estimation method
+# HSNS, RAS - Omega_h for 1 factor is not meaningful, just omega_t; Omega_h and Omega_asymptotic are not meaningful with one factor
+
+```
+
+
+```{r}
+
+# Wartość Alpha Cronbacha
+
+# tylko podskale
+
+alpha_subscales <-  lapply(sapply(scales, function(scale) 
+    sapply(subscales_list[[scale]], function(subscale)
+    compute_alpha_sub(scale, subscale))), function(subalphas)
+      setNames(subalphas, str_to_lower(names(subalphas))))
+
+cat("Wartości alfa\n")
+alpha_subscales 
+
+
+```
+
+
+
+
+```{r}
+#| eval: false
+
+# Nie wiem po co to na razie
+# skorelowane zmienne IJZ
+
+dane %>%
+    select(matches('IJZ.*\\d+$')) %>%
+    mutate(across(everything(), as.integer)) %>%
+    corrr::correlate(method = 'spearman') %>% 
+    corrr::stretch(na.rm = TRUE, remove.dups = TRUE) %>% 
+    arrange(-r)
+
+psych::omega(dane %>%
+               select(matches('IJZ.*\\d+$'), -IJZ_9, -IJZ_10, -IJZ_3, -IJZ_11, -IJZ_12, -IJZ_20, -IJZ_7) %>%
+               mutate(across(everything(), as.integer)) %>%
+               janitor::remove_empty(which = 'rows'),  
+    nfactors = scales_factors['IJZ'], plot = FALSE)$omega.tot
+
+```
+
+
+

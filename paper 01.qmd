@@ -132,6 +132,10 @@ set.seed(42)
 # wczytanie danych
 load("./dane przeliczone/dane_all.RData")
 
+library(readr)
+codebook <- read_delim("dane surowe/codebook.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
 # załadowanie pakietów
 library(tableone)                  # tabela opisowa
 library(knitr)
@@ -145,6 +149,10 @@ library(tidyverse)
 ```
 
 ```{r}
+# wybrane jako lepsze itemy: CSIV_60b IPC_13a ISC_31b ISC_63b
+
+
+
 # korekty na danych
 dane |> 
   mutate(across(all_of(c("change_selfesteem", "change_work", "change_relationships")), as.numeric)) -> dane
@@ -211,8 +219,7 @@ a\)  Analiza rzetelności (reliability)
 
 współczynnik alfa Cronbacha dla każdej skali/podskali, aby ocenić, czy pozycje są spójne.
 
-```{ rtt_alfa, child = "analiza-Rzetelnosc.Rmd"}
-# ToDo: Agnieszka
+```{r rtt_alfa, child = "analiza-Rzetelnosc.Rmd"}
 ```
 
 b\) Analiza trafności (validity)
