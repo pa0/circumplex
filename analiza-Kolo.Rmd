@@ -1,222 +1,132 @@
 <!-- analiza struktury kołowej -->
 
-Analiza eksploracyjna
+Aby sprawdzić, czy struktura **Circular Scale of Interpersonal Values (CSIV)** jest spójna z modelem kołowym, możesz wykorzystać **R** do przeprowadzenia analiz, które pozwolą ocenić, czy dane pasują do teoretycznego modelu kołowego. Poniżej przedstawiam kroki, które możesz podjąć, oraz przykłady kodu w R.
 
-???
+---
 
-
-Analiza konfirmacyjna
-
-```{r, modele}
-model_one <- '
-# Definicja jednoczynnikowego modelu CFA
-F1 =~ lirs_1 + lirs_2 + lirs_3 + lirs_4 +
-       lirs_5 + lirs_6 + lirs_7 + lirs_8 +
-       lirs_9 + lirs_10 + lirs_11 + lirs_12 +
-       lirs_13 + lirs_14
-'
-
-model_multi <- '
-# Detachement
-  DET =~ lirs_11 + lirs_12 + lirs_13 + lirs_5 + lirs_8 + lirs_10
-# Hurt
-  HRT =~ lirs_1 + lirs_2 + lirs_3 + lirs_4
-# Guilt
-  GLT =~ lirs_6 + lirs_7 + lirs_9 + lirs_14
-
- # Setting factor variance to 1
- DET ~~ 1*DET
- HRT ~~ 1*HRT
- GLT ~~ 1*GLT
-'
-
-model_bifactor <- '
-  # Czynnik ogólny
-  GF =~ NA*lirs_1 + lirs_2 + lirs_3 + lirs_4 + lirs_5 +
-        lirs_6 + lirs_7 + lirs_8 + lirs_9 + lirs_10 +
-        lirs_11 + lirs_12 + lirs_13 + lirs_14
-  GF ~~ 1*GF
-
-  # Detachement
-  DET =~ NA*lirs_11 + lirs_12 + lirs_13 + lirs_5 + lirs_8 + lirs_10
-  DET ~~ 1*DET
-  # Hurt
-  HRT =~ NA*lirs_1 + lirs_2 + lirs_3 + lirs_4
-  HRT ~~ 1*HRT
-  # Guilt
-  GLT =~ NA*lirs_6 + lirs_7 + lirs_9 + lirs_14
-  GLT ~~ 1*GLT
-
-  # Korelacje między czynnikami specyficznymi i ogólnym
-  GF ~~ 0*DET + 0*HRT + 0*GLT
-  DET ~~ NA*HRT + NA*GLT
-  HRT ~~ NA*GLT
-'
-```
+### 1. **Przygotowanie danych**
+   - Załaduj dane do R i upewnij się, że są odpowiednio przygotowane (braki danych, skalowanie itp.).
+   - Jeśli masz wiele zmiennych, upewnij się, że są one zgodne z wymiarami teoretycznymi modelu kołowego.
 
 ```{r}
-indeksy <- c("chisq.scaled", "df.scaled", "pvalue.scaled", "cfi.robust", "tli.robust", "nfi.scaled", "rmsea.robust", "rmsea.ci.lower.robust", "rmsea.ci.upper.robust", "srmr_bentler_nomean")
+# Przykład załadowania danych
+data <- dane |> dplyr::select(matches("CSIV.*[0-9]$"))
 
-dane_lirs_1 <- df_all |> filter(research == "3a")
+# Sprawdź strukturę danych
+str(data)
 
-# Dopasowanie modeli
-fit_one <- lavaan::cfa(
-  model_one,
-  data = dane_lirs_1,
-  estimator = "ML",
-  se = "robust",
-  test = "satorra.bentler"
-)
-fit_multi <- lavaan::cfa(
-  model_multi,
-  data = dane_lirs_1,
-  estimator = "ML",
-  se = "robust",
-  test = "satorra.bentler"
-)
-fit_bifactor <- lavaan::cfa(
-  model_bifactor,
-  data = dane_lirs_1,
-  estimator = "ML",
-  se = "robust",
-  test = "satorra.bentler"
-)
-
-# drugi zbiór
-fit_bifactor_3b <- lavaan::cfa(
-  model_bifactor,
-  data = df_all |> filter(research == "3b"),
-  estimator = "ML",
-  se = "robust",
-  test = "satorra.bentler"
-)
-
-# Zbieranie wskaźników dopasowania
-fit_measures <- function(fit) {
-  lavaan::fitMeasures(fit, indeksy)
-}
-
-results <- tibble::tibble(
-  indeksy = c("Chi2", "df", "p.value","CFI","TLI","NFI","RMSEA","95%CI.l","95%CI.u","SRMR"),  # Dodanie kolumny z nazwami indeksów
-  one = fit_measures(fit_one),
-  multi = fit_measures(fit_multi),
-  bifactor = fit_measures(fit_bifactor),
-  bifactor_3b = fit_measures(fit_bifactor_3b)
-) |> 
-  dplyr::mutate(across(-indeksy, round, 3))    # Zaokrąglanie wszystkich kolumn poza indeksami
- 
-# Wyświetlanie tabeli
-results |> 
-  kable(
-    caption = "Fit indices in three models",
-    col.names = c("Index", "One factor", "Three factors", "Bifactor","Bifactor")
-    ) |> 
-  add_header_above(c(" " = 1, "PRE (Study 3a)" = 3, "POST (Study 3b)" = 1)) |> 
-  kable_paper()
+# Usuń braki danych (jeśli są)
+data <- na.omit(data)
 ```
 
-```{r, sem_plot_params}
-m <- matrix(NA, 14,6)
-m[7,1] <- c("GF")
-m[,4] <- c(
-  "l_11","l_12","l_13","l_5","l_8","l_10",
-  "lr_1","l_2","l_3","l_4",
-  "l_6","l_7","l_9","l_14" )
-m[,6] <- c(NA,NA,"DET",NA,NA,NA,"HRT",NA,NA,NA,"GLT",NA,NA,NA)
+---
 
-my_label_list <- c(
-  lr_1 = "L1",
-  l_2 = "L2",
-  l_3 = "L3",
-  l_4 = "L4",
-  l_5 = "L5",
-  l_6 = "L6",
-  l_7 = "L7",
-  l_8 = "L8",
-  l_9 = "L9",
-  l_10 = "L10",
-  l_11 = "L11",
-  l_12 = "L12",
-  l_13 = "L13",
-  l_14 = "L14"
-)
+### 2. **Analiza czynnikowa eksploracyjna (EFA)**
+   - EFA pozwala na eksplorację struktury czynnikowej bez zakładania wcześniejszych założeń. Możesz użyć jej, aby sprawdzić, czy czynniki wyłaniają się zgodnie z modelem kołowym.
 
-my_curve_list <- c(
-  "GLT ~~ DET" = 1.4
-)
+```{r}
+# Załaduj potrzebne biblioteki
+library(psych)
+
+# Przeprowadź EFA
+efa_result <- fa(data, nfactors = 2, rotate = "oblimin")  # Dostosuj nfactors do liczby teoretycznych wymiarów
+print(efa_result)
+
+# Wizualizacja wyników EFA
+fa.diagram(efa_result)
 ```
 
-```{r cfaModels, fig.cap="Ładunki czynnikowe w modelach"}
-#| fig-subcap: 
-#|   - "PRE"
-#|   - "POST"
-#| warning: false
-#| message: false
-#| echo: false
-#| layout-ncol: 2
-semPaths(
-  fit_bifactor,
-  what = "std",
-  whatLabels = "std",
-  edge.label.cex = .9,
-  layout = m,
-  sizeMan = 5,
-  residuals = F, thresholds = F,
-  edge.color = "black",    # wszsytkie strzałki czarne
-  fade = F,                # wszystkie strzałki bez alpha
-  esize = 1,               # wszystkie strzaki równe
-  mar = c(1, 15, 1, 15),
-  DoNotPlot = T # semPath ma nie rysować, bo poniżej są dodatki
-) |> 
-  change_node_label(label_list = my_label_list) |>
-  set_curve(my_curve_list) |> 
-  mark_sig(fit_bifactor) |> 
-  plot()
+   - **Interpretacja**: Sprawdź, czy czynniki odpowiadają teoretycznym wymiarom modelu kołowego. Jeśli tak, to jest to wstępne potwierdzenie spójności.
 
+---
 
-semPaths(
-  fit_bifactor_3b,
-  what = "std",
-  whatLabels = "std",
-  edge.label.cex = .9,
-  layout = m,
-  sizeMan = 5,
-  residuals = F, thresholds = F,
-  edge.color = "black",    # wszsytkie strzałki czarne
-  fade = F,                # wszystkie strzałki bez alpha
-  esize = 1,               # wszystkie strzaki równe
-  mar = c(1, 15, 1, 15),
-  DoNotPlot = T # semPath ma nie rysować, bo poniżej są dodatki
-) |> 
-  change_node_label(label_list = my_label_list) |>
-  set_curve(my_curve_list) |> 
-  mark_sig(fit_bifactor_3b) |> 
-  plot()
+### 3. **Analiza czynnikowa konfirmacyjna (CFA)**
+   - CFA pozwala na testowanie, czy dane pasują do określonego modelu teoretycznego (w tym przypadku modelu kołowego).
+   - Użyj pakietu **lavaan** do przeprowadzenia CFA.
+
+```{r}
+# Załaduj bibliotekę lavaan
+library(lavaan)
+
+# Zdefiniuj model teoretyczny (dostosuj do swojego przypadku)
+model <- '
+  # Definiuj czynniki i ich wskaźniki
+  Wymiar1 =~ item1 + item2 + item3
+  Wymiar2 =~ item4 + item5 + item6
+  Wymiar3 =~ item7 + item8 + item9
+  # Dodaj korelacje między wymiarami, jeśli są przewidywane w modelu kołowym
+  Wymiar1 ~~ Wymiar2
+  Wymiar2 ~~ Wymiar3
+  Wymiar3 ~~ Wymiar1
+'
+
+# Przeprowadź CFA
+cfa_result <- cfa(model, data = data)
+summary(cfa_result, fit.measures = TRUE, standardized = TRUE)
+
+# Wizualizacja modelu
+library(semPlot)
+semPaths(cfa_result, what = "std", layout = "circle")  # Użyj layout = "circle" dla modelu kołowego
 ```
 
+   - **Interpretacja**: Sprawdź wskaźniki dopasowania modelu (np. CFI, TLI, RMSEA). Jeśli wartości są w akceptowalnych zakresach (CFI/TLI > 0.90, RMSEA < 0.08), model jest dobrze dopasowany.
 
-```{r tbl-ladunki}
-cbind(
-fit_bifactor |> parameterEstimates(standardized = TRUE) |> 
-  filter(op == "=~") |> 
-  select(lhs, rhs, std.all) |> 
-  pivot_wider(id_cols = rhs, names_from = lhs, values_from = std.all) |> 
-  mutate(
-    across(where(is.numeric), ~ ifelse(is.na(.), "", round(.,3))),
-    rhs = rhs |> str_to_upper() |> str_replace(pattern="_", replacement = " ")
-    ),
-fit_bifactor_3b |> parameterEstimates(standardized = TRUE) |> 
-  filter(op == "=~") |> 
-  select(lhs, rhs, std.all) |> 
-  pivot_wider(id_cols = rhs, names_from = lhs, values_from = std.all) |> 
-  mutate(across(where(is.numeric), ~ ifelse(is.na(.), "", round(.,3)))) |> 
-  select(-rhs)
-) |> 
-  kable(
-    caption = "Loadings in bifactorial model for LIRS in Study 3a and 3b",
-    col.names = c("Items", "Total", "Detachment", "Hurt", "Guilt", "Total", "Detachment", "Hurt", "Guilt")
-    ) |> 
-  add_header_above(c(" "=1, "PRE (Study 3a)" = 4, "POST (Study 3b)" = 4)) |> 
-  kable_paper()
+---
+
+### 4. **Analiza struktury kołowej**
+   - Aby bezpośrednio przetestować, czy dane pasują do modelu kołowego, możesz użyć **analizy circumplexu** (circumplex analysis). Pakiet **circular** w R może być pomocny.
+
+```{r}
+# Załaduj bibliotekę circular
+library(circular)
+
+# Przygotuj dane do analizy circumplexu
+angles <- circular(data$angle, units = "degrees")  # angle to teoretyczne kąty w modelu kołowym
+
+# Wizualizacja circumplexu
+plot(angles, stack = TRUE, bins = 360, col = "blue")
 ```
 
+   - **Interpretacja**: Sprawdź, czy punkty danych układają się w okręgu zgodnie z modelem kołowym.
+
+---
+
+### 5. **Testowanie hipotez o strukturze kołowej**
+   - Możesz również użyć testów statystycznych, aby sprawdzić, czy dane pasują do modelu kołowego. Na przykład:
+     - **Test zgodności rozkładu kołowego**: Sprawdź, czy rozkład danych jest zgodny z modelem kołowym.
+     - **Test korelacji między wymiarami**: Sprawdź, czy korelacje między wymiarami są zgodne z teoretycznym modelem kołowym.
+
+```{r}
+# Test zgodności rozkładu kołowego
+rayleigh.test(angles)
+
+# Test korelacji między wymiarami
+correlation_matrix <- cor(data)
+print(correlation_matrix)
+```
+
+---
+
+### 6. **Wizualizacja wyników**
+   - Wizualizacja jest kluczowa do zrozumienia, czy dane pasują do modelu kołowego. Możesz użyć pakietów **ggplot2** lub **plotly** do stworzenia wykresów kołowych.
+
+```{r}
+# Przykład wizualizacji circumplexu z ggplot2
+library(ggplot2)
+
+ggplot(data, aes(x = Wymiar1, y = Wymiar2)) +
+  geom_point() +
+  coord_fixed() +
+  theme_minimal() +
+  labs(title = "Circumplex Model of CSIV", x = "Wymiar 1", y = "Wymiar 2")
+```
+
+---
+
+### Podsumowanie
+Aby sprawdzić, czy struktura CSIV jest spójna z modelem kołowym, możesz:
+1. Przeprowadzić **EFA** i **CFA**, aby ocenić strukturę czynnikową.
+2. Użyć **analizy circumplexu**, aby zwizualizować dane w kontekście kołowym.
+3. Przeprowadzić testy statystyczne, aby ocenić zgodność z modelem kołowym.
+
+Pamiętaj, że wyniki powinny być interpretowane w kontekście teoretycznym, a wszelkie odstępstwa od modelu kołowego powinny być dokładnie przeanalizowane.

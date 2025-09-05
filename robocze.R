@@ -1,7 +1,6 @@
 # Porównanie  "CSIV_60b", "IIPC.1_13b", "ISC_31b", "ISC_63b"                
 # wybrane jako lepsze itemy: CSIV_60b IPC_13a ISC_31b ISC_63b
 
-
 ## 1
 
 dane %>% janitor::tabyl(CSIV_60)
@@ -82,7 +81,6 @@ sd(as.integer(dane$IIPC.1_13),  na.rm = TRUE) / mean(as.integer(dane$IIPC.1_13),
 sd(as.integer(dane$IIPC.1_13b), na.rm = TRUE) / mean(as.integer(dane$IIPC.1_13b), na.rm = TRUE)
 
 # chyba lepsza a (?)
-
 
 ## 3
 
@@ -172,7 +170,10 @@ sd(as.integer(dane$ISC_63b), na.rm = TRUE) / mean(as.integer(dane$ISC_63b), na.r
 ggpubr::ggarrange(p1, p2, p3, p4, ncol = 2, nrow = 2)
 
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> origin/main
 # zmiany w dane2
 dane2$survey_finish_time <- NULL     # technical question
 dane2$sex3 <- NULL                   # technical question
@@ -187,5 +188,8 @@ colnames(dane2)[c(1:7,206:227)] <- c("id", "gender", "age", "residence",
 
 dane2 |> dplyr::select(dplyr::contains("aktywnosc_zawodowa_")) |> rowSums()
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> origin/main
 str(dane2)

@@ -41,7 +41,14 @@ table_one <- CreateTableOne(
 )
 
 # Przekształć tabelę do ramki danych
-table_one_df <- print(table_one, printToggle = FALSE)
+table_one_df <- print(
+  table_one,
+  showAllLevels = F,
+  quote = FALSE,
+  noSpaces = TRUE,
+  printToggle = FALSE
+)
+
 
 # Zmień nazwy wierszy
 rownames(table_one_df) <- c(
@@ -140,10 +147,17 @@ table_two <- CreateTableOne(
   ),
   strata = "set",
   data = dane,
+  addOverall = T,
   test = T
 )
 # Przekształć tabelę do ramki danych
 table_two_df <- print(table_two, printToggle = FALSE)
+
+rownames(table_two_df) <- rownames(table_two_df) %>%
+  gsub(" = 1", "", .) %>%
+  gsub("\\(%\\)", "[%]", .) %>%
+  gsub("\\(mean \\(SD\\)\\)", "[M(SD)]", .)
+
 # Wyświetl tabelę z nowymi nazwami wierszy
 table_two_df |> 
   kableone(
@@ -158,7 +172,7 @@ table_two_df |>
   kableExtra::kable_paper() |> 
    pack_rows(
     index = c(
-      " " = 1, "Changes in 2 weeks" = 24,  "Job acivities" = 9
+      " " = 1, "Changes in 2 weeks" = 3,  "Job acivities" = 9
     )
   )
 ```
