@@ -1,0 +1,131 @@
+<!-- 03 -->
+
+```{r}
+
+library(tidyverse)
+
+researchs_n = dane %>%
+  group_by(set) %>%
+  count() %>%
+  pull(n, name = set)
+n = sum(researchs_n)
+
+c(researchs_n, total = n)
+
+```
+
+```{r}
+
+get_subscales = function(scale){
+  codebook %>%
+    filter(str_sub(eng2, 1, str_length(scale)) == scale) %>%
+    pull(key) %>% str_remove('-') %>% unique() %>% sort()}
+
+scales = c('CSIV', 'IIPC', 'ISC', 'PICD', 'HSNS', 'IJZ', 'SIFS', 'RAS', 'SCL')
+subscales_list = sapply(scales, get_subscales)
+scales_factors = sapply(subscales_list, length)
+
+list2env(subscales_list, envir = .GlobalEnv)
+
+```
+
+
+#### Spójność wewnętrzna
+
+# współczynnik omega dla każdej skali i alfa Cronbacha dla każdej skali/podskali, aby ocenić, czy pozycje są spójne.
+
+```{r}
+
+compute_omega = function(scale){
+  psych::omega(dane %>%
+                  filter(set == 'A') %>%
+                  select(matches(str_c(scale, '.*\\d+$')),
+                         -SCL_20) %>%
+                  mutate(across(everything(), as.integer)) %>%
+                  janitor::remove_empty(which = 'rows'),  
+    nfactors = scales_factors[scale], plot = FALSE)$omega.tot}
+
+compute_alpha = function(scale){
+  psych::alpha(dane %>%
+                 filter(set == 'A') %>%
+                 select(matches(str_c(scale, '.*\\d+$')),
+                        -SCL_20) %>%
+                 mutate(across(everything(), as.integer)) %>%
+                 janitor::remove_empty(which = 'rows'))$total$std.alpha}
+
+compute_alpha_sub = function(scale, subscale){
+  if ((codebook %>% filter(str_sub(eng2, 1, str_length(scale)) == scale & key == !!subscale) %>% nrow()) > 1) {
+    psych::alpha(dane %>%
+                   filter(set == 'A') %>%
+                   select(codebook %>%
+                            filter(str_sub(eng2, 1, str_length(scale)) == scale & key == !!subscale) %>%
+                            pull(eng2),
+                          -matches('\\d+(a|b)$')) %>%
+                   mutate(across(everything(), as.integer)) %>%
+                   janitor::remove_empty(which = 'rows'))$total$std.alpha
+  } else NA}
+
+```
+
+
+```{r}
+
+# Wartość Alpha Cronbacha
+
+# skale
+
+alpha_scales = sapply(scales, compute_alpha)
+alpha_scales
+
+# CSIV, PICD, SIFS, IJZ - Some items were negatively correlated with the first principal component and probably should be reversed  
+
+
+# podskale
+
+alpha_subscales = lapply(sapply(scales,
+                                function(scale) sapply(subscales_list[[scale]], function(subscale) compute_alpha_sub(scale, subscale))),
+                         function(subalphas) setNames(subalphas, str_to_lower(names(subalphas))))
+alpha_subscales # %>% unlist()
+
+# IJZ, RelationDeep - Some items were negatively correlated with the first principal component and probably should be reversed
+
+```
+
+
+```{r}
+
+# Wartość Omega
+
+omega_scales = sapply(scales, compute_omega)
+omega_scales
+
+# RAS       - diag(.) had 0 or NA entries; non-finite result is doubtful
+
+# SIFS, ISC - The estimated weights for the factor scores are probably incorrect. Try a different factor score estimation method
+# HSNS, RAS - Omega_h for 1 factor is not meaningful, just omega_t; Omega_h and Omega_asymptotic are not meaningful with one factor
+
+```
+
+
+```{r}
+
+# skorelowane zmienne RAS
+
+dane %>%
+    filter(set == 'A') %>%
+    select(matches('RAS.*\\d+$')) %>%
+    mutate(across(everything(), as.integer)) %>%
+    corrr::correlate(method = 'spearman') %>% 
+    corrr::stretch(na.rm = TRUE, remove.dups = TRUE) %>% 
+    arrange(-r)
+
+psych::omega(dane %>%
+               filter(set == 'A') %>%
+               select(matches('RAS.*\\d+$'), -RAS_2) %>%
+               mutate(across(everything(), as.integer)) %>%
+               janitor::remove_empty(which = 'rows'),  
+    nfactors = scales_factors['RAS'], plot = FALSE)$omega.tot
+
+```
+
+
